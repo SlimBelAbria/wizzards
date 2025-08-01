@@ -930,33 +930,69 @@
             .player-card {
                 padding: 1rem;
                 border-radius: 0.75rem;
+                margin-bottom: 1.5rem;
             }
             .player-header {
                 flex-direction: column;
-                gap: 0.25rem;
-                padding-bottom: 0.5rem;
+                gap: 0.5rem;
+                padding-bottom: 0.75rem;
+                text-align: center;
             }
             .player-name {
-                font-size: 1rem;
+                font-size: 1.1rem;
+                font-weight: 700;
             }
             .bid-info {
-                font-size: 0.95rem;
-                padding: 0.5rem 0.75rem;
+                font-size: 1rem;
+                padding: 0.75rem 1rem;
+                border-radius: 2rem;
+                font-weight: 600;
+                min-width: 120px;
+                text-align: center;
             }
             .button-container {
-                gap: 0.25rem;
-                margin-top: 0.5rem;
+                gap: 0.5rem;
+                margin-top: 1rem;
+                justify-content: center;
+                flex-wrap: wrap;
             }
             .interactive-btn {
-                width: 2.5rem;
-                height: 2.5rem;
-                font-size: 1rem;
-                margin: 0 0.1rem;
+                width: 3rem;
+                height: 3rem;
+                font-size: 1.1rem;
+                margin: 0 0.25rem;
+                font-weight: 700;
+                border-width: 2px;
+            }
+            .interactive-btn.selected {
+                transform: scale(1.15);
+                box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.3);
+            }
+            .interactive-btn.active {
+                transform: scale(1.15);
+                box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.3);
             }
             .total-display {
-                font-size: 1rem;
-                padding: 0.75rem 0.5rem;
+                font-size: 1.1rem;
+                padding: 1rem;
                 border-radius: 0.75rem;
+                margin-top: 1rem;
+                text-align: center;
+            }
+            .total-display.valid {
+                background: linear-gradient(135deg, var(--success), #059669);
+                color: white;
+                font-weight: 700;
+            }
+            .total-display.invalid {
+                background: linear-gradient(135deg, var(--danger), #dc2626);
+                color: white;
+                font-weight: 700;
+            }
+            .total-display.neutral {
+                background: linear-gradient(135deg, var(--accent), #d97706);
+                color: white;
+                font-weight: 700;
             }
             .winner-banner {
                 font-size: 1.1rem;
@@ -1011,6 +1047,97 @@
             .notification-title {
                 font-size: 1rem;
             }
+            
+            /* Enhanced mobile bidding and verification styles */
+            #biddingPhase .player-card,
+            #playingPhase .player-card {
+                border: 2px solid var(--border);
+                box-shadow: var(--shadow);
+                transition: all 0.3s ease;
+            }
+            
+            #biddingPhase .player-card:hover,
+            #playingPhase .player-card:hover {
+                border-color: var(--primary);
+                box-shadow: var(--shadow-lg);
+            }
+            
+            /* Mobile-specific bid/trick button improvements */
+            #biddingPhase .interactive-btn,
+            #playingPhase .interactive-btn {
+                min-width: 3.5rem;
+                min-height: 3.5rem;
+                font-size: 1.2rem;
+                font-weight: 700;
+                border-radius: 50%;
+                transition: all 0.2s ease;
+                position: relative;
+                overflow: hidden;
+            }
+            
+            #biddingPhase .interactive-btn:active,
+            #playingPhase .interactive-btn:active {
+                transform: scale(0.95);
+            }
+            
+            /* Enhanced visual feedback for mobile */
+            #biddingPhase .interactive-btn.selected::before,
+            #playingPhase .interactive-btn.active::before {
+                content: '';
+                position: absolute;
+                top: -2px;
+                left: -2px;
+                right: -2px;
+                bottom: -2px;
+                border-radius: 50%;
+                background: linear-gradient(45deg, var(--primary), var(--secondary));
+                z-index: -1;
+                animation: pulse 2s infinite;
+            }
+            
+            /* Mobile bid verification display */
+            #bidTotalDisplay {
+                position: sticky;
+                top: 0.5rem;
+                z-index: 10;
+                margin: 1rem 0;
+                font-size: 1.2rem;
+                line-height: 1.4;
+            }
+            
+            /* Mobile trick verification improvements */
+            #playingPhase .bid-info {
+                font-size: 1.1rem;
+                padding: 0.75rem 1.25rem;
+                margin: 0.5rem 0;
+                display: inline-block;
+                min-width: 140px;
+            }
+            
+            /* Mobile phase indicators */
+            .phase-indicator {
+                justify-content: center;
+                margin-top: 0.5rem;
+            }
+            
+            .phase-dot {
+                width: 1rem;
+                height: 1rem;
+            }
+            
+            /* Mobile instructions enhancement */
+            .instructions p {
+                font-size: 1.1rem;
+                font-weight: 600;
+                margin-bottom: 1rem;
+            }
+            
+            .tip {
+                font-size: 1rem;
+                padding: 0.75rem;
+                margin-bottom: 0.5rem;
+                border-radius: 0.5rem;
+            }
         }
         
         /* Animations */
@@ -1034,6 +1161,12 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
         }
         
         .fade-in-up {
@@ -1680,13 +1813,16 @@
         function createBidInputs() {
             bidInputs.innerHTML = '';
             
-            // Add round info header
+            // Add round info header with enhanced mobile display
             const roundInfo = document.createElement('div');
             roundInfo.className = 'instructions';
-            roundInfo.innerHTML = `<p><strong>Round ${gameState.currentRound}</strong>: Each player can bid 0 to ${gameState.currentRound} tricks</p>
-                                 <div class="tips">
-                                     <span class="tip">Important: The sum of all bids cannot equal ${gameState.currentRound}</span>
-                                 </div>`;
+            roundInfo.innerHTML = `
+                <p><strong>Round ${gameState.currentRound}</strong>: Each player can bid 0 to ${gameState.currentRound} tricks</p>
+                <div class="tips">
+                    <span class="tip">🎯 Tap the number buttons to select your bid</span>
+                    <span class="tip">⚠️ Important: The sum of all bids cannot equal ${gameState.currentRound}</span>
+                    <span class="tip">📱 Scroll down to see the bid verification at the bottom</span>
+                </div>`;
             bidInputs.appendChild(roundInfo);
             
             gameState.players.forEach((player, index) => {
@@ -1701,11 +1837,12 @@
                 playerName.textContent = `👤 ${player}`;
                 
                 const bidLabel = document.createElement('div');
-                bidLabel.textContent = '🎲 Bid:';
+                bidLabel.textContent = '🎲 Select Your Bid:';
                 bidLabel.style.cssText = `
                     font-weight: 600;
                     color: var(--text);
-                    font-size: 0.875rem;
+                    font-size: 1rem;
+                    margin-top: 0.5rem;
                 `;
                 
                 playerHeader.appendChild(playerName);
@@ -1724,6 +1861,9 @@
                     bidButton.dataset.bid = bidValue;
                     bidButton.textContent = bidValue;
                     
+                    // Add mobile-friendly tooltip
+                    bidButton.title = `Bid ${bidValue} tricks`;
+                    
                     const currentBid = gameState.bids[player] || 0;
                     const isSelected = currentBid === bidValue;
                     
@@ -1731,7 +1871,7 @@
                         bidButton.classList.add('selected');
                     }
                     
-                    // Add click handler
+                    // Add enhanced click handler with mobile feedback
                     bidButton.addEventListener('click', function() {
                         const playerName = this.dataset.player;
                         const selectedBid = parseInt(this.dataset.bid);
@@ -1747,8 +1887,28 @@
                         
                         this.classList.add('selected');
                         
+                        // Add mobile haptic feedback simulation
+                        if (navigator.vibrate) {
+                            navigator.vibrate(50);
+                        }
+                        
+                        // Show immediate feedback
+                        showNotification(`${playerName} bid ${selectedBid} tricks`, 'success', 2000);
+                        
                         // Update bid total
                         updateBidTotal();
+                        
+                        // Save game state
+                        saveGame();
+                    });
+                    
+                    // Add touch feedback for mobile
+                    bidButton.addEventListener('touchstart', function() {
+                        this.style.transform = 'scale(0.95)';
+                    });
+                    
+                    bidButton.addEventListener('touchend', function() {
+                        this.style.transform = '';
                     });
                     
                     buttonContainer.appendChild(bidButton);
@@ -1758,11 +1918,15 @@
                 bidInputs.appendChild(playerCard);
             });
             
-            // Add real-time bid total display
+            // Add enhanced real-time bid total display
             const totalDisplay = document.createElement('div');
             totalDisplay.id = 'bidTotalDisplay';
             totalDisplay.className = 'total-display neutral';
-            totalDisplay.textContent = 'Total Bids: 0';
+            totalDisplay.innerHTML = `
+                <div style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem;">📊 Bid Verification</div>
+                <div>Total Bids: <span id="bidTotalNumber">0</span></div>
+                <div id="bidTotalStatus" style="font-size: 0.9rem; margin-top: 0.5rem;">Select bids for all players</div>
+            `;
             bidInputs.appendChild(totalDisplay);
             
             // Initialize total display
@@ -1772,21 +1936,39 @@
         // Update bid total display
         function updateBidTotal() {
             let total = 0;
+            let bidsCount = 0;
             
             // Get bids from gameState
             gameState.players.forEach(player => {
                 const bid = gameState.bids[player] || 0;
                 total += bid;
+                if (gameState.bids[player] !== undefined) {
+                    bidsCount++;
+                }
             });
             
             const totalDisplay = document.getElementById('bidTotalDisplay');
-            if (totalDisplay) {
-                if (total === gameState.currentRound) {
+            const bidTotalNumber = document.getElementById('bidTotalNumber');
+            const bidTotalStatus = document.getElementById('bidTotalStatus');
+            
+            if (totalDisplay && bidTotalNumber && bidTotalStatus) {
+                bidTotalNumber.textContent = total;
+                
+                if (bidsCount < gameState.players.length) {
+                    totalDisplay.className = 'total-display neutral';
+                    bidTotalStatus.innerHTML = `⏳ ${bidsCount}/${gameState.players.length} players have bid`;
+                } else if (total === gameState.currentRound) {
                     totalDisplay.className = 'total-display invalid';
-                    totalDisplay.innerHTML = `🚫 <strong>Total Bids: ${total}</strong><br><em>INVALID - Cannot equal round ${gameState.currentRound}</em>`;
+                    bidTotalStatus.innerHTML = `🚫 INVALID - Cannot equal round ${gameState.currentRound}`;
+                    
+                    // Add mobile-specific error animation
+                    totalDisplay.style.animation = 'shake 0.5s ease-in-out';
+                    setTimeout(() => {
+                        totalDisplay.style.animation = '';
+                    }, 500);
                 } else {
                     totalDisplay.className = 'total-display valid';
-                    totalDisplay.innerHTML = `✅ <strong>Total Bids: ${total}</strong><br><em>Valid - Ready to play!</em>`;
+                    bidTotalStatus.innerHTML = `✅ Valid - Ready to play!`;
                 }
             }
         }
@@ -1794,24 +1976,35 @@
         // Submit bids
         function submitBids() {
             let totalBids = 0;
+            let allBidsSubmitted = true;
             
             // Collect bids from gameState
             gameState.players.forEach(player => {
                 const bid = gameState.bids[player] || 0;
                 totalBids += bid;
+                if (gameState.bids[player] === undefined) {
+                    allBidsSubmitted = false;
+                }
             });
+            
+            // Check if all players have bid
+            if (!allBidsSubmitted) {
+                showNotification('Please ensure all players have made their bids before submitting!', 'warning', 4000);
+                return;
+            }
             
             // Check that total bids doesn't equal the round number
             if (totalBids === gameState.currentRound) {
-                // Highlight all bid buttons to show the issue
+                // Enhanced mobile error feedback
                 const allBidButtons = document.querySelectorAll('.interactive-btn');
                 allBidButtons.forEach(button => {
                     button.style.borderColor = 'var(--danger)';
                     button.style.boxShadow = '0 4px 8px rgba(244, 67, 54, 0.4)';
+                    button.style.animation = 'shake 0.5s ease-in-out';
                 });
                 
-                // Show error message
-                const errorMsg = `Invalid Bids! The sum of all bids (${totalBids}) cannot equal the round number (${gameState.currentRound}). Please adjust your bids and try again.`;
+                // Show enhanced error message
+                const errorMsg = `🚫 Invalid Bids! Total (${totalBids}) cannot equal round ${gameState.currentRound}. Please adjust bids and try again.`;
                 showNotification(errorMsg, 'error', 6000);
                 
                 // Clear the highlighting after a delay
@@ -1819,6 +2012,7 @@
                     allBidButtons.forEach(button => {
                         button.style.borderColor = '';
                         button.style.boxShadow = '';
+                        button.style.animation = '';
                     });
                 }, 3000);
                 
@@ -1830,8 +2024,8 @@
             showPlayingPhase();
             saveGame();
             
-            // Show success notification
-            showNotification('Bids submitted successfully! Time to play and record tricks!', 'success', 4000);
+            // Show enhanced success notification
+            showNotification('🎯 Bids submitted! Time to play and record tricks!', 'success', 4000);
         }
 
         // Show playing phase UI
@@ -1841,8 +2035,20 @@
             submitBidsBtn.style.display = 'none';
             calculateRoundBtn.style.display = 'inline-block';
             
-            // Create trick inputs
+            // Create enhanced trick inputs with mobile optimization
             trickInputs.innerHTML = '';
+            
+            // Add playing phase instructions
+            const playingInstructions = document.createElement('div');
+            playingInstructions.className = 'instructions';
+            playingInstructions.innerHTML = `
+                <p><strong>Round ${gameState.currentRound} - Playing Phase</strong>: Record the tricks each player actually won</p>
+                <div class="tips">
+                    <span class="tip">🎯 Tap the number buttons to record tricks won</span>
+                    <span class="tip">📊 The total tricks must equal ${gameState.currentRound}</span>
+                    <span class="tip">✅ Green = Perfect bid, Red = Incorrect bid</span>
+                </div>`;
+            trickInputs.appendChild(playingInstructions);
             
             gameState.players.forEach((player, index) => {
                 const playerCard = document.createElement('div');
@@ -1868,8 +2074,9 @@
                 trickLabel.style.cssText = `
                     font-weight: 600;
                     color: var(--text);
-                    margin-bottom: 1rem;
-                    font-size: 1rem;
+                    margin: 1rem 0;
+                    font-size: 1.1rem;
+                    text-align: center;
                 `;
                 playerCard.appendChild(trickLabel);
                 
@@ -1883,11 +2090,13 @@
                     btn.textContent = i;
                     btn.dataset.player = player;
                     btn.dataset.tricks = i;
+                    btn.title = `Record ${i} tricks won`;
                     
                     if (gameState.tricks[player] === i) {
                         btn.classList.add('active');
                     }
                     
+                    // Enhanced click handler with mobile feedback
                     btn.addEventListener('click', function() {
                         // Remove active class from all buttons for this player
                         document.querySelectorAll(`.interactive-btn[data-player="${player}"]`).forEach(b => {
@@ -1898,18 +2107,40 @@
                         this.classList.add('active');
                         gameState.tricks[player] = i;
                         
+                        // Add mobile haptic feedback
+                        if (navigator.vibrate) {
+                            navigator.vibrate(50);
+                        }
+                        
                         saveGame();
                         
-                        // Update bid info with visual comparison
+                        // Update bid info with enhanced visual comparison
                         const bid = gameState.bids[player] || 0;
                         const tricks = i;
                         if (bid === tricks) {
                             bidInfo.style.background = 'linear-gradient(135deg, var(--success), #059669)';
                             bidInfo.textContent = `Bid: ${bid} ✓ Perfect!`;
+                            bidInfo.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.3)';
                         } else {
                             bidInfo.style.background = 'linear-gradient(135deg, var(--danger), #dc2626)';
                             bidInfo.textContent = `Bid: ${bid} ✗ Got ${tricks}`;
+                            bidInfo.style.boxShadow = '0 4px 12px rgba(239, 68, 68, 0.3)';
                         }
+                        
+                        // Show immediate feedback
+                        showNotification(`${player} won ${i} tricks`, 'info', 2000);
+                        
+                        // Update trick total verification
+                        updateTrickTotal();
+                    });
+                    
+                    // Add touch feedback for mobile
+                    btn.addEventListener('touchstart', function() {
+                        this.style.transform = 'scale(0.95)';
+                    });
+                    
+                    btn.addEventListener('touchend', function() {
+                        this.style.transform = '';
                     });
                     
                     buttonContainer.appendChild(btn);
@@ -1918,6 +2149,60 @@
                 playerCard.appendChild(buttonContainer);
                 trickInputs.appendChild(playerCard);
             });
+            
+            // Add trick total verification display
+            const trickTotalDisplay = document.createElement('div');
+            trickTotalDisplay.id = 'trickTotalDisplay';
+            trickTotalDisplay.className = 'total-display neutral';
+            trickTotalDisplay.innerHTML = `
+                <div style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem;">📊 Trick Verification</div>
+                <div>Total Tricks: <span id="trickTotalNumber">0</span> / ${gameState.currentRound}</div>
+                <div id="trickTotalStatus" style="font-size: 0.9rem; margin-top: 0.5rem;">Record tricks for all players</div>
+            `;
+            trickInputs.appendChild(trickTotalDisplay);
+            
+            // Initialize trick total display
+            updateTrickTotal();
+        }
+
+        // Update trick total display
+        function updateTrickTotal() {
+            let total = 0;
+            let tricksCount = 0;
+            
+            // Get tricks from gameState
+            gameState.players.forEach(player => {
+                const tricks = gameState.tricks[player] || 0;
+                total += tricks;
+                if (gameState.tricks[player] !== undefined) {
+                    tricksCount++;
+                }
+            });
+            
+            const trickTotalDisplay = document.getElementById('trickTotalDisplay');
+            const trickTotalNumber = document.getElementById('trickTotalNumber');
+            const trickTotalStatus = document.getElementById('trickTotalStatus');
+            
+            if (trickTotalDisplay && trickTotalNumber && trickTotalStatus) {
+                trickTotalNumber.textContent = total;
+                
+                if (tricksCount < gameState.players.length) {
+                    trickTotalDisplay.className = 'total-display neutral';
+                    trickTotalStatus.innerHTML = `⏳ ${tricksCount}/${gameState.players.length} players recorded`;
+                } else if (total !== gameState.currentRound) {
+                    trickTotalDisplay.className = 'total-display invalid';
+                    trickTotalStatus.innerHTML = `🚫 INVALID - Must equal ${gameState.currentRound}`;
+                    
+                    // Add mobile-specific error animation
+                    trickTotalDisplay.style.animation = 'shake 0.5s ease-in-out';
+                    setTimeout(() => {
+                        trickTotalDisplay.style.animation = '';
+                    }, 500);
+                } else {
+                    trickTotalDisplay.className = 'total-display valid';
+                    trickTotalStatus.innerHTML = `✅ Valid - Ready to calculate scores!`;
+                }
+            }
         }
 
         // Calculate round scores
@@ -1932,20 +2217,21 @@
             });
             
             if (!allValid) {
-                showNotification('Please record tricks for all players!', 'error', 4000);
+                showNotification('📝 Please record tricks for all players before calculating scores!', 'error', 4000);
                 return;
             }
             
             // Validate that sum of tricks equals round number
             const totalTricks = gameState.players.reduce((sum, player) => sum + gameState.tricks[player], 0);
             if (totalTricks !== gameState.currentRound) {
-                showNotification(`Invalid trick count! Total tricks won (${totalTricks}) must equal the round number (${gameState.currentRound}). Please check your trick recordings.`, 'error', 6000);
+                showNotification(`🚫 Invalid trick count! Total (${totalTricks}) must equal round ${gameState.currentRound}. Please check your recordings.`, 'error', 6000);
                 
-                // Highlight trick buttons in red to show error
+                // Enhanced mobile error feedback
                 const trickButtons = document.querySelectorAll('.interactive-btn');
                 trickButtons.forEach(btn => {
                     btn.style.borderColor = 'var(--danger)';
                     btn.style.boxShadow = '0 4px 8px rgba(244, 67, 54, 0.4)';
+                    btn.style.animation = 'shake 0.5s ease-in-out';
                 });
                 
                 // Clear highlighting after 3 seconds
@@ -1953,6 +2239,7 @@
                     trickButtons.forEach(btn => {
                         btn.style.borderColor = '';
                         btn.style.boxShadow = '';
+                        btn.style.animation = '';
                     });
                 }, 3000);
                 
