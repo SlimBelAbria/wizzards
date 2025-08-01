@@ -645,6 +645,21 @@
             100% { transform: scale(1.1) rotate(0deg); }
         }
         
+        @keyframes bidSelected {
+            0% { 
+                transform: scale(1.1);
+                box-shadow: 0 6px 16px rgba(76, 175, 80, 0.5), 0 0 0 2px rgba(76, 175, 80, 0.3);
+            }
+            50% { 
+                transform: scale(1.15);
+                box-shadow: 0 8px 20px rgba(76, 175, 80, 0.7), 0 0 0 4px rgba(76, 175, 80, 0.5);
+            }
+            100% { 
+                transform: scale(1.1);
+                box-shadow: 0 6px 16px rgba(76, 175, 80, 0.5), 0 0 0 2px rgba(76, 175, 80, 0.3);
+            }
+        }
+        
         .playing-phase-header {
             display: flex;
             justify-content: space-between;
@@ -1658,33 +1673,99 @@
                 playerHeader.appendChild(bidLabel);
                 playerCard.appendChild(playerHeader);
                 
-                const inputContainer = document.createElement('div');
-                inputContainer.style.cssText = `
+                const bidButtonContainer = document.createElement('div');
+                bidButtonContainer.style.cssText = `
                     display: flex;
+                    justify-content: center;
                     align-items: center;
-                    gap: 10px;
+                    gap: 8px;
+                    flex-wrap: wrap;
+                    margin-top: 10px;
                 `;
                 
-                const input = document.createElement('input');
-                input.type = 'number';
-                input.className = 'bid-input';
-                input.min = '0';
-                input.max = gameState.currentRound.toString();
-                input.value = gameState.bids[player] || '0';
-                input.dataset.player = player;
-                input.style.cssText = `
-                    flex: 1;
-                    padding: 12px;
-                    border: 2px solid var(--primary);
-                    border-radius: 8px;
-                    font-size: 1.1rem;
-                    text-align: center;
-                    font-weight: bold;
-                    transition: all 0.3s ease;
-                `;
+                // Create circular bid buttons for 0 to current round
+                for (let bidValue = 0; bidValue <= gameState.currentRound; bidValue++) {
+                    const bidButton = document.createElement('button');
+                    bidButton.type = 'button';
+                    bidButton.className = 'bid-btn';
+                    bidButton.dataset.player = player;
+                    bidButton.dataset.bid = bidValue;
+                    bidButton.textContent = bidValue;
+                    
+                    const currentBid = gameState.bids[player] || 0;
+                    const isSelected = currentBid === bidValue;
+                    
+                    bidButton.style.cssText = `
+                        width: 45px;
+                        height: 45px;
+                        border-radius: 50%;
+                        border: ${isSelected ? '4px solid var(--success)' : '3px solid var(--primary)'};
+                        background: ${isSelected ? 'linear-gradient(145deg, var(--success), #45a049)' : 'linear-gradient(145deg, var(--light), #e8d5f2)'};
+                        color: ${isSelected ? 'white' : 'var(--primary)'};
+                        font-size: 1.1rem;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                        box-shadow: ${isSelected ? '0 6px 16px rgba(76, 175, 80, 0.5), 0 0 0 2px rgba(76, 175, 80, 0.3)' : '0 4px 8px rgba(106, 27, 154, 0.2)'};
+                        position: relative;
+                        overflow: hidden;
+                        transform: ${isSelected ? 'scale(1.1)' : 'scale(1)'};
+                        animation: ${isSelected ? 'bidSelected 2s ease-in-out infinite' : 'none'};
+                    `;
+                    
+                    // Add hover effect
+                    bidButton.addEventListener('mouseenter', function() {
+                        if (!isSelected) {
+                            this.style.background = 'linear-gradient(145deg, var(--primary), var(--secondary))';
+                            this.style.color = 'white';
+                            this.style.transform = 'translateY(-3px) scale(1.05)';
+                            this.style.boxShadow = '0 6px 12px rgba(106, 27, 154, 0.4)';
+                        }
+                    });
+                    
+                    bidButton.addEventListener('mouseleave', function() {
+                        if (!isSelected) {
+                            this.style.background = 'linear-gradient(145deg, var(--light), #e8d5f2)';
+                            this.style.color = 'var(--primary)';
+                            this.style.transform = 'translateY(0) scale(1)';
+                            this.style.boxShadow = '0 4px 8px rgba(106, 27, 154, 0.2)';
+                        }
+                    });
+                    
+                    // Add click handler
+                    bidButton.addEventListener('click', function() {
+                        const playerName = this.dataset.player;
+                        const selectedBid = parseInt(this.dataset.bid);
+                        
+                        // Update game state
+                        gameState.bids[playerName] = selectedBid;
+                        
+                        // Update all buttons for this player
+                        const allPlayerButtons = bidButtonContainer.querySelectorAll('.bid-btn');
+                        allPlayerButtons.forEach(btn => {
+                            const btnBid = parseInt(btn.dataset.bid);
+                            const isBtnSelected = btnBid === selectedBid;
+                            
+                            btn.style.border = isBtnSelected ? '4px solid var(--success)' : '3px solid var(--primary)';
+                            btn.style.background = isBtnSelected ? 
+                                'linear-gradient(145deg, var(--success), #45a049)' : 
+                                'linear-gradient(145deg, var(--light), #e8d5f2)';
+                            btn.style.color = isBtnSelected ? 'white' : 'var(--primary)';
+                            btn.style.transform = isBtnSelected ? 'scale(1.1)' : 'translateY(0) scale(1)';
+                            btn.style.boxShadow = isBtnSelected ? 
+                                '0 6px 16px rgba(76, 175, 80, 0.5), 0 0 0 2px rgba(76, 175, 80, 0.3)' : 
+                                '0 4px 8px rgba(106, 27, 154, 0.2)';
+                            btn.style.animation = isBtnSelected ? 'bidSelected 2s ease-in-out infinite' : 'none';
+                        });
+                        
+                        // Update bid total
+                        updateBidTotal();
+                    });
+                    
+                    bidButtonContainer.appendChild(bidButton);
+                }
                 
-                inputContainer.appendChild(input);
-                playerCard.appendChild(inputContainer);
+                playerCard.appendChild(bidButtonContainer);
                 bidInputs.appendChild(playerCard);
             });
             
@@ -1706,30 +1787,22 @@
             totalDisplay.textContent = 'Total Bids: 0';
             bidInputs.appendChild(totalDisplay);
             
-            // Add event listeners for real-time validation
-            const inputs = document.querySelectorAll('.bid-input');
-            inputs.forEach(input => {
-                input.addEventListener('input', updateBidTotal);
-            });
-            
             // Initialize total display
             updateBidTotal();
         }
         
         // Update bid total display
         function updateBidTotal() {
-            const bidInputs = document.querySelectorAll('.bid-input');
             let total = 0;
             let allValid = true;
             
-            bidInputs.forEach(input => {
-                const bid = parseInt(input.value);
-                if (!isNaN(bid)) {
-                    total += bid;
-                } else {
-                    allValid = false;
-                }
+            // Get bids from gameState instead of input fields
+            gameState.players.forEach(player => {
+                const bid = gameState.bids[player] || 0;
+                total += bid;
             });
+            
+            allValid = true; // All bids are valid since they're selected from buttons
             
             const totalDisplay = document.getElementById('bidTotalDisplay');
             if (totalDisplay) {
@@ -1754,36 +1827,21 @@
 
         // Submit bids
         function submitBids() {
-            const bidInputs = document.querySelectorAll('.bid-input');
-            let allValid = true;
             let totalBids = 0;
             
-            // Validate inputs and collect bids
-            bidInputs.forEach(input => {
-                const player = input.dataset.player;
-                const bid = parseInt(input.value);
-                
-                if (isNaN(bid)) {
-                    allValid = false;
-                    input.style.borderColor = 'var(--danger)';
-                } else {
-                    gameState.bids[player] = bid;
-                    totalBids += bid;
-                    input.style.borderColor = '';
-                }
+            // Collect bids from gameState (already validated by button selection)
+            gameState.players.forEach(player => {
+                const bid = gameState.bids[player] || 0;
+                totalBids += bid;
             });
-            
-            if (!allValid) {
-                showNotification('Please enter valid numbers for all bids!', 'error', 4000);
-                return;
-            }
             
             // Check that total bids doesn't equal the round number
             if (totalBids === gameState.currentRound) {
-                // Highlight all bid inputs to show the issue
-                bidInputs.forEach(input => {
-                    input.style.borderColor = 'var(--danger)';
-                    input.style.backgroundColor = 'rgba(255, 0, 0, 0.1)';
+                // Highlight all bid buttons to show the issue
+                const allBidButtons = document.querySelectorAll('.bid-btn');
+                allBidButtons.forEach(button => {
+                    button.style.borderColor = 'var(--danger)';
+                    button.style.boxShadow = '0 4px 8px rgba(244, 67, 54, 0.4)';
                 });
                 
                 // Show a more detailed error message
@@ -1796,9 +1854,9 @@
                 
                 // Clear the highlighting after a delay
                 setTimeout(() => {
-                    bidInputs.forEach(input => {
-                        input.style.borderColor = '';
-                        input.style.backgroundColor = '';
+                    allBidButtons.forEach(button => {
+                        button.style.borderColor = 'var(--primary)';
+                        button.style.boxShadow = '0 4px 8px rgba(106, 27, 154, 0.2)';
                     });
                 }, 3000);
                 
@@ -1953,6 +2011,29 @@
             
             if (!allValid) {
                 showNotification('Please record tricks for all players!', 'error', 4000);
+                return;
+            }
+            
+            // Validate that sum of tricks equals round number
+            const totalTricks = gameState.players.reduce((sum, player) => sum + gameState.tricks[player], 0);
+            if (totalTricks !== gameState.currentRound) {
+                showNotification(`Invalid trick count! Total tricks won (${totalTricks}) must equal the round number (${gameState.currentRound}). Please check your trick recordings.`, 'error', 6000);
+                
+                // Highlight trick buttons in red to show error
+                const trickButtons = document.querySelectorAll('.trick-btn');
+                trickButtons.forEach(btn => {
+                    btn.style.borderColor = 'var(--danger)';
+                    btn.style.boxShadow = '0 4px 8px rgba(244, 67, 54, 0.4)';
+                });
+                
+                // Clear highlighting after 3 seconds
+                setTimeout(() => {
+                    trickButtons.forEach(btn => {
+                        btn.style.borderColor = '';
+                        btn.style.boxShadow = '';
+                    });
+                }, 3000);
+                
                 return;
             }
             
