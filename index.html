@@ -1812,10 +1812,9 @@
         function createBidInputs() {
             bidInputs.innerHTML = '';
             
-            // Create bid input table
-            const bidTable = document.createElement('table');
-            bidTable.className = 'bid-table';
-            bidTable.style.cssText = `
+            // Create table structure
+            const table = document.createElement('table');
+            table.style.cssText = `
                 width: 100%;
                 border-collapse: collapse;
                 margin-bottom: 2rem;
@@ -1825,8 +1824,8 @@
                 box-shadow: var(--shadow);
             `;
             
-            // Create table header
-            const tableHeader = document.createElement('thead');
+            // Table header
+            const thead = document.createElement('thead');
             const headerRow = document.createElement('tr');
             headerRow.style.cssText = `
                 background: var(--primary);
@@ -1853,11 +1852,11 @@
             
             headerRow.appendChild(playerHeader);
             headerRow.appendChild(bidHeader);
-            tableHeader.appendChild(headerRow);
-            bidTable.appendChild(tableHeader);
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
             
-            // Create table body
-            const tableBody = document.createElement('tbody');
+            // Table body
+            const tbody = document.createElement('tbody');
             
             gameState.players.forEach((player, index) => {
                 const tableRow = document.createElement('tr');
@@ -1876,13 +1875,27 @@
                 
                 // Player name cell
                 const playerCell = document.createElement('td');
-                playerCell.textContent = `👤 ${player}`;
                 playerCell.style.cssText = `
                     padding: 1rem;
                     font-weight: 600;
                     color: var(--text);
                     border-right: 1px solid var(--border);
                 `;
+                
+                const playerName = document.createElement('div');
+                playerName.className = 'player-name';
+                playerName.textContent = `👤 ${player}`;
+                playerCell.appendChild(playerName);
+                
+                const bidLabel = document.createElement('div');
+                bidLabel.textContent = '🎲 Select Your Bid:';
+                bidLabel.style.cssText = `
+                    font-weight: 600;
+                    color: var(--text);
+                    font-size: 1rem;
+                    margin-top: 0.5rem;
+                `;
+                playerCell.appendChild(bidLabel);
                 
                 // Bid selection cell
                 const bidCell = document.createElement('td');
@@ -1893,13 +1906,6 @@
                 
                 const buttonContainer = document.createElement('div');
                 buttonContainer.className = 'button-container';
-                buttonContainer.style.cssText = `
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    gap: 0.5rem;
-                    flex-wrap: wrap;
-                `;
                 
                 for (let bidValue = 0; bidValue <= gameState.currentRound; bidValue++) {
                     const bidButton = document.createElement('button');
@@ -1970,11 +1976,11 @@
                 bidCell.appendChild(buttonContainer);
                 tableRow.appendChild(playerCell);
                 tableRow.appendChild(bidCell);
-                tableBody.appendChild(tableRow);
+                tbody.appendChild(tableRow);
             });
             
-            bidTable.appendChild(tableBody);
-            bidInputs.appendChild(bidTable);
+            table.appendChild(tbody);
+            bidInputs.appendChild(table);
             
             const totalDisplay = document.createElement('div');
             totalDisplay.id = 'bidTotalDisplay';
@@ -2081,10 +2087,11 @@
             submitBidsBtn.style.display = 'none';
             calculateRoundBtn.style.display = 'inline-block';
             
-            // Create trick input table
-            const trickTable = document.createElement('table');
-            trickTable.className = 'trick-table';
-            trickTable.style.cssText = `
+            trickInputs.innerHTML = '';
+            
+            // Create table structure
+            const table = document.createElement('table');
+            table.style.cssText = `
                 width: 100%;
                 border-collapse: collapse;
                 margin-bottom: 2rem;
@@ -2094,8 +2101,8 @@
                 box-shadow: var(--shadow);
             `;
             
-            // Create table header
-            const tableHeader = document.createElement('thead');
+            // Table header
+            const thead = document.createElement('thead');
             const headerRow = document.createElement('tr');
             headerRow.style.cssText = `
                 background: var(--primary);
@@ -2132,11 +2139,11 @@
             headerRow.appendChild(playerHeader);
             headerRow.appendChild(bidHeader);
             headerRow.appendChild(trickHeader);
-            tableHeader.appendChild(headerRow);
-            trickTable.appendChild(tableHeader);
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
             
-            // Create table body
-            const tableBody = document.createElement('tbody');
+            // Table body
+            const tbody = document.createElement('tbody');
             
             gameState.players.forEach((player, index) => {
                 const tableRow = document.createElement('tr');
@@ -2155,13 +2162,17 @@
                 
                 // Player name cell
                 const playerCell = document.createElement('td');
-                playerCell.textContent = `👤 ${player}`;
                 playerCell.style.cssText = `
                     padding: 1rem;
                     font-weight: 600;
                     color: var(--text);
                     border-right: 1px solid var(--border);
                 `;
+                
+                const playerName = document.createElement('div');
+                playerName.className = 'player-name';
+                playerName.textContent = `👤 ${player}`;
+                playerCell.appendChild(playerName);
                 
                 // Bid info cell
                 const bidCell = document.createElement('td');
@@ -2173,16 +2184,7 @@
                 
                 const bidInfo = document.createElement('div');
                 bidInfo.className = 'bid-info';
-                bidInfo.textContent = `${gameState.bids[player] || 0}`;
-                bidInfo.style.cssText = `
-                    background: var(--accent);
-                    color: white;
-                    padding: 0.5rem 1rem;
-                    border-radius: 2rem;
-                    font-weight: 600;
-                    font-size: 0.875rem;
-                    display: inline-block;
-                `;
+                bidInfo.textContent = `Bid: ${gameState.bids[player] || 0}`;
                 bidCell.appendChild(bidInfo);
                 
                 // Trick selection cell
@@ -2192,15 +2194,19 @@
                     text-align: center;
                 `;
                 
+                const trickLabel = document.createElement('div');
+                trickLabel.textContent = '🎯 Tricks Won:';
+                trickLabel.style.cssText = `
+                    font-weight: 600;
+                    color: var(--text);
+                    margin: 1rem 0;
+                    font-size: 1.1rem;
+                    text-align: center;
+                `;
+                trickCell.appendChild(trickLabel);
+                
                 const buttonContainer = document.createElement('div');
                 buttonContainer.className = 'button-container';
-                buttonContainer.style.cssText = `
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    gap: 0.5rem;
-                    flex-wrap: wrap;
-                `;
                 
                 for (let i = 0; i <= gameState.currentRound; i++) {
                     const btn = document.createElement('button');
@@ -2232,11 +2238,11 @@
                         const tricks = i;
                         if (bid === tricks) {
                             bidInfo.style.background = 'linear-gradient(135deg, var(--success), #059669)';
-                            bidInfo.textContent = `${bid} ✓`;
+                            bidInfo.textContent = `Bid: ${bid} ✓ Perfect!`;
                             bidInfo.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.3)';
                         } else {
                             bidInfo.style.background = 'linear-gradient(135deg, var(--danger), #dc2626)';
-                            bidInfo.textContent = `${bid} ✗ ${tricks}`;
+                            bidInfo.textContent = `Bid: ${bid} ✗ Got ${tricks}`;
                             bidInfo.style.boxShadow = '0 4px 12px rgba(239, 68, 68, 0.3)';
                         }
                         
@@ -2251,11 +2257,11 @@
                 tableRow.appendChild(playerCell);
                 tableRow.appendChild(bidCell);
                 tableRow.appendChild(trickCell);
-                tableBody.appendChild(tableRow);
+                tbody.appendChild(tableRow);
             });
             
-            trickTable.appendChild(tableBody);
-            trickInputs.appendChild(trickTable);
+            table.appendChild(tbody);
+            trickInputs.appendChild(table);
             
             const trickTotalDisplay = document.createElement('div');
             trickTotalDisplay.id = 'trickTotalDisplay';
