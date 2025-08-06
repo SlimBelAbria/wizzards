@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Wizard Score Tracker</title>
     <style>
         :root {
@@ -27,6 +27,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
         
         body {
@@ -36,23 +37,24 @@
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            touch-action: manipulation;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 1rem;
         }
         
         /* Header */
         header {
             text-align: center;
-            margin-bottom: 3rem;
-            padding: 2rem 0;
+            margin-bottom: 2rem;
+            padding: 1rem 0;
         }
         
         h1 {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: 800;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
@@ -73,16 +75,19 @@
             display: flex;
             justify-content: center;
             gap: 0.5rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             background: var(--surface);
             padding: 0.5rem;
             border-radius: 1rem;
             box-shadow: var(--shadow);
             border: 1px solid var(--border);
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
         }
         
         .nav-tab {
-            padding: 0.75rem 1.5rem;
+            padding: 0.75rem 1.25rem;
             border: none;
             background: transparent;
             color: var(--text-light);
@@ -91,6 +96,7 @@
             cursor: pointer;
             transition: all 0.2s ease;
             font-size: 0.875rem;
+            min-width: 100px;
         }
         
         .nav-tab:hover {
@@ -107,7 +113,7 @@
         /* Main Content */
         .main-content {
             background: var(--surface);
-            border-radius: 1.5rem;
+            border-radius: 1rem;
             box-shadow: var(--shadow-lg);
             border: 1px solid var(--border);
             overflow: hidden;
@@ -115,7 +121,7 @@
         
         .content-section {
             display: none;
-            padding: 2rem;
+            padding: 1.5rem;
         }
         
         .content-section.active {
@@ -130,11 +136,11 @@
         
         /* Section Headers */
         .section-header {
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
         
         .section-header h2 {
-            font-size: 1.875rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: var(--text);
             margin-bottom: 0.5rem;
@@ -150,7 +156,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
         
         .player-input {
@@ -186,8 +192,8 @@
             background: linear-gradient(135deg, #f8fafc, #f1f5f9);
             border: 1px solid var(--border);
             border-radius: 1rem;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
         }
         
         .settings-card h3 {
@@ -200,7 +206,7 @@
         /* Game Mode Cards */
         .mode-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 1rem;
             margin-bottom: 1.5rem;
         }
@@ -209,7 +215,7 @@
             background: var(--surface);
             border: 2px solid var(--border);
             border-radius: 1rem;
-            padding: 1.5rem;
+            padding: 1.25rem;
             cursor: pointer;
             transition: all 0.2s ease;
             position: relative;
@@ -229,7 +235,7 @@
         }
         
         .mode-icon {
-            font-size: 2rem;
+            font-size: 1.75rem;
             margin-bottom: 0.75rem;
             display: block;
         }
@@ -238,10 +244,11 @@
             font-weight: 700;
             color: var(--text);
             margin-bottom: 0.25rem;
+            font-size: 1rem;
         }
         
         .mode-desc {
-            font-size: 0.875rem;
+            font-size: 0.8125rem;
             color: var(--text-light);
             margin-bottom: 0.75rem;
         }
@@ -284,7 +291,7 @@
         
         /* Form Controls */
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
         }
         
         .form-group label {
@@ -292,6 +299,7 @@
             font-weight: 600;
             color: var(--text);
             margin-bottom: 0.5rem;
+            font-size: 0.875rem;
         }
         
         .form-control {
@@ -323,6 +331,7 @@
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
+            min-height: 44px; /* Better touch target */
         }
         
         .btn-primary {
@@ -376,17 +385,17 @@
         .game-board {
             background: var(--surface);
             border-radius: 1rem;
-            padding: 2rem;
-            margin-bottom: 2rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
         }
         
         .round-info {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-            padding: 1.5rem;
+            padding: 1.25rem;
             border-radius: 1rem;
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             font-weight: 700;
             font-size: 1.125rem;
         }
@@ -395,7 +404,7 @@
         .scoreboard {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             background: var(--surface);
             border-radius: 1rem;
             overflow: hidden;
@@ -429,8 +438,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
-            padding: 1rem 1.5rem;
+            margin-bottom: 1.25rem;
+            padding: 1rem;
             background: linear-gradient(135deg, #f8fafc, #f1f5f9);
             border-radius: 1rem;
             border: 1px solid var(--border);
@@ -466,8 +475,8 @@
             background: linear-gradient(135deg, #fef3c7, #fde68a);
             border: 1px solid #f59e0b;
             border-radius: 1rem;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
         }
         
         .instructions p {
@@ -496,7 +505,7 @@
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 1rem;
-            padding: 1.5rem;
+            padding: 1.25rem;
             margin-bottom: 1rem;
             transition: all 0.2s ease;
         }
@@ -580,8 +589,8 @@
         
         /* Total Display */
         .total-display {
-            margin-top: 1.5rem;
-            padding: 1rem 1.5rem;
+            margin-top: 1.25rem;
+            padding: 1rem 1.25rem;
             border-radius: 1rem;
             text-align: center;
             font-weight: 700;
@@ -607,12 +616,12 @@
         .winner-banner {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-            padding: 2rem;
+            padding: 1.5rem;
             border-radius: 1rem;
             text-align: center;
             font-size: 1.5rem;
             font-weight: 700;
-            margin: 2rem 0;
+            margin: 1.5rem 0;
             display: none;
             animation: pulse 2s infinite;
         }
@@ -639,7 +648,7 @@
         
         .modal {
             background: var(--surface);
-            border-radius: 1.5rem;
+            border-radius: 1rem;
             max-width: 600px;
             width: 90%;
             max-height: 85vh;
@@ -651,7 +660,7 @@
         .modal-header {
             background: var(--primary);
             color: white;
-            padding: 1.5rem 2rem;
+            padding: 1.25rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -680,16 +689,17 @@
         }
         
         .modal-content {
-            padding: 2rem;
+            padding: 1.5rem;
             max-height: 60vh;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
         
         /* Notifications */
         .notification-container {
             position: fixed;
-            top: 2rem;
-            right: 2rem;
+            top: 1rem;
+            right: 1rem;
             z-index: 10000;
             display: flex;
             flex-direction: column;
@@ -701,7 +711,7 @@
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 1rem;
-            padding: 1.5rem;
+            padding: 1.25rem;
             box-shadow: var(--shadow-xl);
             transform: translateX(100%);
             opacity: 0;
@@ -765,7 +775,7 @@
         /* Rules Content */
         .rules-content h3 {
             color: var(--primary);
-            margin: 2rem 0 1rem 0;
+            margin: 1.5rem 0 1rem 0;
             font-size: 1.25rem;
             font-weight: 700;
         }
@@ -783,8 +793,8 @@
         /* Credit Section */
         .credit-section {
             text-align: center;
-            margin-top: 3rem;
-            padding: 2rem;
+            margin-top: 2rem;
+            padding: 1.5rem;
             background: var(--surface);
             border-radius: 1rem;
             border: 1px solid var(--border);
@@ -797,15 +807,99 @@
             color: var(--text-light);
         }
         
+        /* Mobile Menu Button */
+        #mobileMenuBtn {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            z-index: 100;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            font-size: 1.5rem;
+        }
+        
+        /* Loading Indicator */
+        #mobileLoading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .loading-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            text-align: center;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 1rem auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Mobile Notification */
+        .mobile-notification {
+            position: fixed;
+            bottom: 20px;
+            left: 10px;
+            right: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            z-index: 10000;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .mobile-notification.success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .mobile-notification.error {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .mobile-notification.info {
+            background: var(--primary);
+            color: white;
+        }
+        
         /* Responsive Design */
         @media (max-width: 768px) {
             .container {
-                padding: 0.5rem;
+                padding: 0.75rem;
             }
             
             h1 {
-                font-size: 1.5rem;
-                word-break: break-word;
+                font-size: 2rem;
             }
             
             header {
@@ -814,329 +908,131 @@
             }
             
             .nav-tabs {
-                flex-direction: column;
-                gap: 0.25rem;
-                padding: 0.25rem;
-            }
-            .nav-tab {
-                font-size: 1rem;
-                padding: 1rem 0.5rem;
-            }
-            
-            .main-content {
-                border-radius: 0.75rem;
+                flex-wrap: nowrap;
+                overflow-x: auto;
                 padding: 0.5rem;
+                justify-content: flex-start;
             }
             
-            .section-header h2 {
-                font-size: 1.2rem;
+            .nav-tab {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+                min-width: 100px;
             }
-            .section-header p {
-                font-size: 0.95rem;
+            
+            .content-section {
+                padding: 1rem;
             }
             
             .player-grid {
                 grid-template-columns: 1fr;
-                gap: 0.5rem;
-            }
-            .player-input label {
-                font-size: 1rem;
-            }
-            .player-input input {
-                font-size: 1rem;
-                padding: 0.75rem 0.75rem;
             }
             
-            .settings-card {
+            .player-input input {
                 padding: 1rem;
-                border-radius: 0.75rem;
             }
+            
             .mode-grid {
-                grid-template-columns: 1fr;
-                gap: 0.5rem;
+                grid-template-columns: 1fr 1fr;
             }
-            .mode-card {
-                padding: 1rem;
-                border-radius: 0.75rem;
-            }
-            .mode-icon {
-                font-size: 1.5rem;
-            }
-            .mode-title {
-                font-size: 1rem;
-            }
-            .mode-desc {
-                font-size: 0.9rem;
-            }
-            .stat {
-                font-size: 0.8rem;
-            }
-            .help-btn {
-                width: 1.25rem;
-                height: 1.25rem;
-                font-size: 0.8rem;
-            }
-            .form-group label {
-                font-size: 1rem;
-            }
-            .form-control {
-                font-size: 1rem;
-                padding: 0.75rem 0.75rem;
-            }
-            .btn-group {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
+            
             .btn {
                 width: 100%;
-                font-size: 1.1rem;
-                padding: 1rem 0.5rem;
-            }
-            .game-board {
                 padding: 1rem;
-                border-radius: 0.75rem;
-            }
-            .round-info {
                 font-size: 1rem;
-                padding: 1rem;
-                border-radius: 0.75rem;
             }
-            .scoreboard th, .scoreboard td {
-                padding: 0.5rem;
-                font-size: 0.95rem;
+            
+            .btn-group {
+                flex-direction: column;
             }
-            .scoreboard {
-                font-size: 0.95rem;
-                border-radius: 0.75rem;
+            
+            .interactive-btn {
+                width: 3.5rem;
+                height: 3.5rem;
+                font-size: 1.2rem;
             }
+            
+            .scoreboard th, 
+            .scoreboard td {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.9rem;
+            }
+            
             .phase-header {
                 flex-direction: column;
-                gap: 0.5rem;
-                text-align: center;
-                padding: 0.75rem 0.5rem;
-                border-radius: 0.75rem;
-            }
-            .instructions {
-                padding: 1rem;
-                border-radius: 0.75rem;
-            }
-            .tips {
-                gap: 0.25rem;
-            }
-            .tip {
-                font-size: 0.95rem;
-                padding: 0.5rem 0.5rem;
-            }
-            .player-card {
-                padding: 1rem;
-                border-radius: 0.75rem;
-                margin-bottom: 1.5rem;
-            }
-            .player-header {
-                flex-direction: column;
-                gap: 0.5rem;
-                padding-bottom: 0.75rem;
+                gap: 0.75rem;
                 text-align: center;
             }
-            .player-name {
-                font-size: 1.1rem;
-                font-weight: 700;
+            
+            .modal {
+                width: 95%;
+                max-height: 90vh;
             }
-            .bid-info {
-                font-size: 1rem;
-                padding: 0.75rem 1rem;
-                border-radius: 2rem;
-                font-weight: 600;
-                min-width: 120px;
-                text-align: center;
+            
+            /* Show mobile menu button on very small screens */
+            @media (max-width: 480px) {
+                .nav-tabs {
+                    display: none;
+                    flex-direction: column;
+                    position: fixed;
+                    bottom: 90px;
+                    right: 20px;
+                    background: white;
+                    border-radius: 1rem;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                    z-index: 99;
+                    max-height: 300px;
+                    overflow-y: auto;
+                }
+                
+                .nav-tabs.show {
+                    display: flex;
+                }
+                
+                #mobileMenuBtn {
+                    display: block;
+                }
+                
+                .mode-grid {
+                    grid-template-columns: 1fr;
+                }
             }
-            .button-container {
-                gap: 0.5rem;
-                margin-top: 1rem;
-                justify-content: center;
-                flex-wrap: wrap;
+        }
+        
+        @media (max-width: 400px) {
+            h1 {
+                font-size: 1.8rem;
             }
+            
+            .player-input input {
+                padding: 0.9rem;
+            }
+            
             .interactive-btn {
                 width: 3rem;
                 height: 3rem;
-                font-size: 1.1rem;
-                margin: 0 0.25rem;
-                font-weight: 700;
-                border-width: 2px;
-            }
-            .interactive-btn.selected {
-                transform: scale(1.15);
-                box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.3);
-            }
-            .interactive-btn.active {
-                transform: scale(1.15);
-                box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.3);
-            }
-            .total-display {
-                font-size: 1.1rem;
-                padding: 1rem;
-                border-radius: 0.75rem;
-                margin-top: 1rem;
-                text-align: center;
-            }
-            .total-display.valid {
-                background: linear-gradient(135deg, var(--success), #059669);
-                color: white;
-                font-weight: 700;
-            }
-            .total-display.invalid {
-                background: linear-gradient(135deg, var(--danger), #dc2626);
-                color: white;
-                font-weight: 700;
-            }
-            .total-display.neutral {
-                background: linear-gradient(135deg, var(--accent), #d97706);
-                color: white;
-                font-weight: 700;
-            }
-            .winner-banner {
-                font-size: 1.1rem;
-                padding: 1rem;
-                border-radius: 0.75rem;
-            }
-            .modal {
-                border-radius: 0.75rem;
-                max-width: 98vw;
-                width: 98vw;
-            }
-            .modal-header {
-                padding: 1rem 1rem;
-            }
-            .modal-title {
-                font-size: 1.1rem;
-            }
-            .close-btn {
-                width: 1.5rem;
-                height: 1.5rem;
                 font-size: 1rem;
             }
-            .modal-content {
-                padding: 1rem;
-                font-size: 0.98rem;
-                max-height: 60vh;
-            }
-            .example-box {
-                padding: 1rem;
-                border-radius: 0.75rem;
-                font-size: 0.98rem;
-            }
-            .credit-section {
-                padding: 1rem;
-                border-radius: 0.75rem;
-                font-size: 0.95rem;
-            }
-            .credit-text {
-                font-size: 0.95rem;
-            }
-            .notification-container {
-                right: 0.5rem;
-                left: 0.5rem;
-                max-width: none;
-                top: 0.5rem;
-            }
-            .notification {
-                padding: 1rem;
-                font-size: 0.98rem;
-                border-radius: 0.75rem;
-            }
-            .notification-title {
-                font-size: 1rem;
+        }
+        
+        /* Landscape orientation */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .container {
+                padding: 0.5rem;
             }
             
-            /* Enhanced mobile bidding and verification styles */
-            #biddingPhase .player-card,
-            #playingPhase .player-card {
-                border: 2px solid var(--border);
-                box-shadow: var(--shadow);
-                transition: all 0.3s ease;
+            .player-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
             
-            #biddingPhase .player-card:hover,
-            #playingPhase .player-card:hover {
-                border-color: var(--primary);
-                box-shadow: var(--shadow-lg);
-            }
-            
-            /* Mobile-specific bid/trick button improvements */
-            #biddingPhase .interactive-btn,
-            #playingPhase .interactive-btn {
-                min-width: 3.5rem;
-                min-height: 3.5rem;
-                font-size: 1.2rem;
-                font-weight: 700;
-                border-radius: 50%;
-                transition: all 0.2s ease;
-                position: relative;
-                overflow: hidden;
-            }
-            
-            #biddingPhase .interactive-btn:active,
-            #playingPhase .interactive-btn:active {
-                transform: scale(0.95);
-            }
-            
-            /* Enhanced visual feedback for mobile */
-            #biddingPhase .interactive-btn.selected::before,
-            #playingPhase .interactive-btn.active::before {
-                content: '';
-                position: absolute;
-                top: -2px;
-                left: -2px;
-                right: -2px;
-                bottom: -2px;
-                border-radius: 50%;
-                background: linear-gradient(45deg, var(--primary), var(--secondary));
-                z-index: -1;
-                animation: pulse 2s infinite;
-            }
-            
-            /* Mobile bid verification display */
-            #bidTotalDisplay {
-                position: sticky;
-                top: 0.5rem;
-                z-index: 10;
-                margin: 1rem 0;
-                font-size: 1.2rem;
-                line-height: 1.4;
-            }
-            
-            /* Mobile trick verification improvements */
-            #playingPhase .bid-info {
-                font-size: 1.1rem;
-                padding: 0.75rem 1.25rem;
-                margin: 0.5rem 0;
-                display: inline-block;
-                min-width: 140px;
-            }
-            
-            /* Mobile phase indicators */
-            .phase-indicator {
-                justify-content: center;
-                margin-top: 0.5rem;
-            }
-            
-            .phase-dot {
-                width: 1rem;
-                height: 1rem;
-            }
-            
-            /* Mobile instructions enhancement */
-            .instructions p {
-                font-size: 1.1rem;
-                font-weight: 600;
-                margin-bottom: 1rem;
-            }
-            
-            .tip {
-                font-size: 1rem;
+            .game-board {
                 padding: 0.75rem;
-                margin-bottom: 0.5rem;
-                border-radius: 0.5rem;
+            }
+            
+            .interactive-btn {
+                width: 2.75rem;
+                height: 2.75rem;
+                font-size: 0.9rem;
             }
         }
         
@@ -1201,8 +1097,8 @@
             background: linear-gradient(135deg, #f8fafc, #f1f5f9);
             border: 1px solid var(--border);
             border-radius: 1rem;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
+            padding: 1.25rem;
+            margin: 1.25rem 0;
             position: relative;
             overflow: hidden;
         }
@@ -1235,6 +1131,8 @@
             <button class="nav-tab" data-mode="play">Current Game</button>
             <button class="nav-tab" data-mode="rules">Rules</button>
         </nav>
+        
+        <button id="mobileMenuBtn">☰</button>
         
         <main class="main-content">
             <div class="content-section setup-section active">
@@ -1488,6 +1386,10 @@
                 </div>
             </div>
         </main>
+        
+        <div class="credit-section">
+            <div class="credit-text">Made by Slim Bel Abria</div>
+        </div>
     </div>
     
     <!-- Help Modal -->
@@ -1506,13 +1408,109 @@
     <!-- Notification Container -->
     <div id="notificationContainer" class="notification-container"></div>
     
-    <!-- Credit Section -->
-    <div class="credit-section">
-        <div class="credit-text">Made by Slim Bel Abria</div>
+    <!-- Mobile Loading Indicator -->
+    <div id="mobileLoading">
+        <div class="loading-content">
+            <div style="font-size: 1.5rem; margin-bottom: 1rem;">Loading...</div>
+            <div class="loading-spinner"></div>
+        </div>
     </div>
 
     <script>
-        // Beautiful Notification System
+        // Mobile menu functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const navTabs = document.querySelector('.nav-tabs');
+            
+            if (window.innerWidth <= 480) {
+                mobileMenuBtn.style.display = 'block';
+                navTabs.style.display = 'none';
+                
+                mobileMenuBtn.addEventListener('click', function() {
+                    if (navTabs.style.display === 'none') {
+                        navTabs.style.display = 'flex';
+                        mobileMenuBtn.textContent = '✕';
+                    } else {
+                        navTabs.style.display = 'none';
+                        mobileMenuBtn.textContent = '☰';
+                    }
+                });
+            }
+            
+            window.addEventListener('resize', function() {
+                if (window.innerWidth <= 480) {
+                    mobileMenuBtn.style.display = 'block';
+                    navTabs.style.display = 'none';
+                } else {
+                    mobileMenuBtn.style.display = 'none';
+                    navTabs.style.display = 'flex';
+                }
+            });
+        });
+
+        // Mobile touch feedback
+        function setupMobileInteractions() {
+            const buttons = document.querySelectorAll('button, .interactive-btn, .mode-card');
+            buttons.forEach(btn => {
+                btn.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.95)';
+                    if (navigator.vibrate) {
+                        navigator.vibrate(30);
+                    }
+                });
+                
+                btn.addEventListener('touchend', function() {
+                    this.style.transform = '';
+                });
+            });
+            
+            // Prevent zooming on double-tap
+            document.addEventListener('dblclick', function(e) {
+                e.preventDefault();
+            }, { passive: false });
+            
+            // Better handling of keyboard on mobile
+            const inputs = document.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    setTimeout(() => {
+                        this.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 300);
+                });
+            });
+        }
+
+        // Mobile notification system
+        function showMobileNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `mobile-notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateY(0)';
+                notification.style.opacity = '1';
+            }, 50);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateY(100px)';
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        // Adaptive notification system
+        function showAdaptiveNotification(message, type = 'info', duration = 3000) {
+            if (window.innerWidth <= 768) {
+                showMobileNotification(message, type);
+            } else {
+                showNotification(message, type, duration);
+            }
+        }
+
+        // Original notification system
         function showNotification(message, type = 'info', duration = 5000) {
             const container = document.getElementById('notificationContainer');
             const notification = document.createElement('div');
@@ -1537,12 +1535,10 @@
             
             container.appendChild(notification);
             
-            // Trigger animation
             setTimeout(() => {
                 notification.classList.add('show');
             }, 100);
             
-            // Auto remove after duration
             if (duration > 0) {
                 setTimeout(() => {
                     notification.classList.remove('show');
@@ -1563,8 +1559,10 @@
             bids: {},
             tricks: {},
             scores: {},
-            gamePhase: 'bidding', // 'bidding' or 'playing'
-            gameStarted: false
+            gamePhase: 'bidding',
+            gameStarted: false,
+            gameMode: 'classic',
+            teamSize: 2
         };
 
         // DOM elements
@@ -1599,31 +1597,42 @@
         const modalContent = document.getElementById('modalContent');
         const closeModal = document.getElementById('closeModal');
         const helpBtns = document.querySelectorAll('.help-btn');
+        const mobileLoading = document.getElementById('mobileLoading');
 
         // Initialize from localStorage
         function loadGame() {
             const savedGame = localStorage.getItem('wizardGame');
             if (savedGame) {
-                const parsed = JSON.parse(savedGame);
-                Object.assign(gameState, parsed);
-                gameState.gameStarted = true;
-                
-                // Update UI
-                currentRoundEl.textContent = gameState.currentRound;
-                totalRoundsEl.textContent = gameState.totalRounds;
-                updateScoreboard();
-                
-                if (gameState.gamePhase === 'playing') {
-                    showPlayingPhase();
-                }
-                
-                // Show play section if game is in progress
-                showSection('play');
-                
-                // Check if game is complete
-                if (gameState.currentRound > gameState.totalRounds) {
-                    declareWinner();
-                }
+                showLoading(true);
+                setTimeout(() => {
+                    const parsed = JSON.parse(savedGame);
+                    Object.assign(gameState, parsed);
+                    gameState.gameStarted = true;
+                    
+                    currentRoundEl.textContent = gameState.currentRound;
+                    totalRoundsEl.textContent = gameState.totalRounds;
+                    updateScoreboard();
+                    
+                    if (gameState.gamePhase === 'playing') {
+                        showPlayingPhase();
+                    }
+                    
+                    showSection('play');
+                    
+                    if (gameState.currentRound > gameState.totalRounds) {
+                        declareWinner();
+                    }
+                    showLoading(false);
+                }, 500);
+            }
+        }
+
+        // Show/hide loading indicator
+        function showLoading(show) {
+            if (show) {
+                mobileLoading.style.display = 'flex';
+            } else {
+                mobileLoading.style.display = 'none';
             }
         }
 
@@ -1654,10 +1663,8 @@
 
         // Handle game mode selection change
         function handleGameModeSelection(selectedMode) {
-            // Update hidden input
             gameModeSelect.value = selectedMode;
             
-            // Update visual selection
             modeCards.forEach(card => {
                 card.classList.remove('selected');
                 if (card.dataset.mode === selectedMode) {
@@ -1665,14 +1672,12 @@
                 }
             });
             
-            // Show/hide team settings
             if (selectedMode === 'team') {
                 teamSettings.style.display = 'block';
             } else {
                 teamSettings.style.display = 'none';
             }
             
-            // Update rounds based on game mode
             if (selectedMode === 'quick') {
                 roundsSelect.value = '10';
                 customRoundsGroup.style.display = 'none';
@@ -1708,8 +1713,15 @@
                     <input type="text" id="player${playerCount + 1}" placeholder="Enter name">
                 `;
                 playerGrid.appendChild(newInput);
+                
+                // Focus the new input on mobile
+                if (window.innerWidth <= 768) {
+                    setTimeout(() => {
+                        document.getElementById(`player${playerCount + 1}`).focus();
+                    }, 100);
+                }
             } else {
-                showNotification('Maximum 6 players allowed!', 'warning', 4000);
+                showAdaptiveNotification('Maximum 6 players allowed!', 'warning', 4000);
             }
         }
 
@@ -1725,60 +1737,57 @@
             });
             
             if (gameState.players.length < 3) {
-                showNotification('You need at least 3 players to play Wizard!', 'error', 5000);
+                showAdaptiveNotification('You need at least 3 players to play Wizard!', 'error', 5000);
                 return;
             }
             
-            // Get game mode and settings
-            const gameMode = gameModeSelect.value;
-            const teamSize = teamSizeSelect.value;
+            showLoading(true);
             
-            // Determine number of rounds
-            let totalRounds;
-            const roundsSelection = roundsSelect.value;
-            
-            if (roundsSelection === 'auto') {
-                totalRounds = Math.floor(60 / gameState.players.length);
-            } else if (roundsSelection === 'custom') {
-                totalRounds = parseInt(customRoundsInput.value);
-                if (isNaN(totalRounds) || totalRounds < 1 || totalRounds > 60) {
-                    showNotification('Please enter a valid number of rounds (1-60)!', 'error', 5000);
-                    return;
+            setTimeout(() => {
+                const gameMode = gameModeSelect.value;
+                const teamSize = teamSizeSelect.value;
+                
+                let totalRounds;
+                const roundsSelection = roundsSelect.value;
+                
+                if (roundsSelection === 'auto') {
+                    totalRounds = Math.floor(60 / gameState.players.length);
+                } else if (roundsSelection === 'custom') {
+                    totalRounds = parseInt(customRoundsInput.value);
+                    if (isNaN(totalRounds) || totalRounds < 1 || totalRounds > 60) {
+                        showAdaptiveNotification('Please enter a valid number of rounds (1-60)!', 'error', 5000);
+                        showLoading(false);
+                        return;
+                    }
+                } else {
+                    totalRounds = parseInt(roundsSelection);
                 }
-            } else {
-                totalRounds = parseInt(roundsSelection);
-            }
-            
-            // Initialize game state
-            gameState.currentRound = 1;
-            gameState.totalRounds = totalRounds;
-            gameState.gameMode = gameMode;
-            gameState.teamSize = parseInt(teamSize);
-            gameState.bids = {};
-            gameState.tricks = {};
-            gameState.scores = {};
-            gameState.gamePhase = 'bidding';
-            gameState.gameStarted = true;
-            
-            // Initialize scores
-            gameState.players.forEach(player => {
-                gameState.scores[player] = 0;
-            });
-            
-            // Update UI
-            currentRoundEl.textContent = gameState.currentRound;
-            totalRoundsEl.textContent = gameState.totalRounds;
-            updateScoreboard();
-            createBidInputs();
-            
-            // Show play section
-            showSection('play');
-            
-            // Save game
-            saveGame();
-            
-            // Show success notification
-            showNotification(`Game started with ${gameState.players.length} players! Round ${gameState.currentRound} begins!`, 'success', 5000);
+                
+                gameState.currentRound = 1;
+                gameState.totalRounds = totalRounds;
+                gameState.gameMode = gameMode;
+                gameState.teamSize = parseInt(teamSize);
+                gameState.bids = {};
+                gameState.tricks = {};
+                gameState.scores = {};
+                gameState.gamePhase = 'bidding';
+                gameState.gameStarted = true;
+                
+                gameState.players.forEach(player => {
+                    gameState.scores[player] = 0;
+                });
+                
+                currentRoundEl.textContent = gameState.currentRound;
+                totalRoundsEl.textContent = gameState.totalRounds;
+                updateScoreboard();
+                createBidInputs();
+                
+                showSection('play');
+                saveGame();
+                
+                showAdaptiveNotification(`Game started with ${gameState.players.length} players! Round ${gameState.currentRound} begins!`, 'success', 5000);
+                showLoading(false);
+            }, 500);
         }
 
         // Update scoreboard display
@@ -1813,7 +1822,6 @@
         function createBidInputs() {
             bidInputs.innerHTML = '';
             
-            // Add round info header with enhanced mobile display
             const roundInfo = document.createElement('div');
             roundInfo.className = 'instructions';
             roundInfo.innerHTML = `
@@ -1821,7 +1829,6 @@
                 <div class="tips">
                     <span class="tip">🎯 Tap the number buttons to select your bid</span>
                     <span class="tip">⚠️ Important: The sum of all bids cannot equal ${gameState.currentRound}</span>
-                    <span class="tip">📱 Scroll down to see the bid verification at the bottom</span>
                 </div>`;
             bidInputs.appendChild(roundInfo);
             
@@ -1852,7 +1859,6 @@
                 const buttonContainer = document.createElement('div');
                 buttonContainer.className = 'button-container';
                 
-                // Create circular bid buttons for 0 to current round
                 for (let bidValue = 0; bidValue <= gameState.currentRound; bidValue++) {
                     const bidButton = document.createElement('button');
                     bidButton.type = 'button';
@@ -1860,8 +1866,6 @@
                     bidButton.dataset.player = player;
                     bidButton.dataset.bid = bidValue;
                     bidButton.textContent = bidValue;
-                    
-                    // Add mobile-friendly tooltip
                     bidButton.title = `Bid ${bidValue} tricks`;
                     
                     const currentBid = gameState.bids[player] || 0;
@@ -1871,15 +1875,12 @@
                         bidButton.classList.add('selected');
                     }
                     
-                    // Add enhanced click handler with mobile feedback
                     bidButton.addEventListener('click', function() {
                         const playerName = this.dataset.player;
                         const selectedBid = parseInt(this.dataset.bid);
                         
-                        // Update game state
                         gameState.bids[playerName] = selectedBid;
                         
-                        // Update all buttons for this player
                         const allPlayerButtons = buttonContainer.querySelectorAll('.interactive-btn');
                         allPlayerButtons.forEach(btn => {
                             btn.classList.remove('selected');
@@ -1887,28 +1888,14 @@
                         
                         this.classList.add('selected');
                         
-                        // Add mobile haptic feedback simulation
                         if (navigator.vibrate) {
-                            navigator.vibrate(50);
+                            navigator.vibrate(30);
                         }
                         
-                        // Show immediate feedback
-                        showNotification(`${playerName} bid ${selectedBid} tricks`, 'success', 2000);
+                        showAdaptiveNotification(`${playerName} bid ${selectedBid} tricks`, 'success', 2000);
                         
-                        // Update bid total
                         updateBidTotal();
-                        
-                        // Save game state
                         saveGame();
-                    });
-                    
-                    // Add touch feedback for mobile
-                    bidButton.addEventListener('touchstart', function() {
-                        this.style.transform = 'scale(0.95)';
-                    });
-                    
-                    bidButton.addEventListener('touchend', function() {
-                        this.style.transform = '';
                     });
                     
                     buttonContainer.appendChild(bidButton);
@@ -1918,7 +1905,6 @@
                 bidInputs.appendChild(playerCard);
             });
             
-            // Add enhanced real-time bid total display
             const totalDisplay = document.createElement('div');
             totalDisplay.id = 'bidTotalDisplay';
             totalDisplay.className = 'total-display neutral';
@@ -1929,7 +1915,6 @@
             `;
             bidInputs.appendChild(totalDisplay);
             
-            // Initialize total display
             updateBidTotal();
         }
         
@@ -1938,7 +1923,6 @@
             let total = 0;
             let bidsCount = 0;
             
-            // Get bids from gameState
             gameState.players.forEach(player => {
                 const bid = gameState.bids[player] || 0;
                 total += bid;
@@ -1961,7 +1945,6 @@
                     totalDisplay.className = 'total-display invalid';
                     bidTotalStatus.innerHTML = `🚫 INVALID - Cannot equal round ${gameState.currentRound}`;
                     
-                    // Add mobile-specific error animation
                     totalDisplay.style.animation = 'shake 0.5s ease-in-out';
                     setTimeout(() => {
                         totalDisplay.style.animation = '';
@@ -1978,7 +1961,6 @@
             let totalBids = 0;
             let allBidsSubmitted = true;
             
-            // Collect bids from gameState
             gameState.players.forEach(player => {
                 const bid = gameState.bids[player] || 0;
                 totalBids += bid;
@@ -1987,15 +1969,12 @@
                 }
             });
             
-            // Check if all players have bid
             if (!allBidsSubmitted) {
-                showNotification('Please ensure all players have made their bids before submitting!', 'warning', 4000);
+                showAdaptiveNotification('Please ensure all players have made their bids before submitting!', 'warning', 4000);
                 return;
             }
             
-            // Check that total bids doesn't equal the round number
             if (totalBids === gameState.currentRound) {
-                // Enhanced mobile error feedback
                 const allBidButtons = document.querySelectorAll('.interactive-btn');
                 allBidButtons.forEach(button => {
                     button.style.borderColor = 'var(--danger)';
@@ -2003,11 +1982,9 @@
                     button.style.animation = 'shake 0.5s ease-in-out';
                 });
                 
-                // Show enhanced error message
                 const errorMsg = `🚫 Invalid Bids! Total (${totalBids}) cannot equal round ${gameState.currentRound}. Please adjust bids and try again.`;
-                showNotification(errorMsg, 'error', 6000);
+                showAdaptiveNotification(errorMsg, 'error', 6000);
                 
-                // Clear the highlighting after a delay
                 setTimeout(() => {
                     allBidButtons.forEach(button => {
                         button.style.borderColor = '';
@@ -2019,13 +1996,11 @@
                 return;
             }
             
-            // Switch to playing phase
             gameState.gamePhase = 'playing';
             showPlayingPhase();
             saveGame();
             
-            // Show enhanced success notification
-            showNotification('🎯 Bids submitted! Time to play and record tricks!', 'success', 4000);
+            showAdaptiveNotification('🎯 Bids submitted! Time to play and record tricks!', 'success', 4000);
         }
 
         // Show playing phase UI
@@ -2035,10 +2010,8 @@
             submitBidsBtn.style.display = 'none';
             calculateRoundBtn.style.display = 'inline-block';
             
-            // Create enhanced trick inputs with mobile optimization
             trickInputs.innerHTML = '';
             
-            // Add playing phase instructions
             const playingInstructions = document.createElement('div');
             playingInstructions.className = 'instructions';
             playingInstructions.innerHTML = `
@@ -2046,7 +2019,6 @@
                 <div class="tips">
                     <span class="tip">🎯 Tap the number buttons to record tricks won</span>
                     <span class="tip">📊 The total tricks must equal ${gameState.currentRound}</span>
-                    <span class="tip">✅ Green = Perfect bid, Red = Incorrect bid</span>
                 </div>`;
             trickInputs.appendChild(playingInstructions);
             
@@ -2083,7 +2055,6 @@
                 const buttonContainer = document.createElement('div');
                 buttonContainer.className = 'button-container';
                 
-                // Create trick buttons (0 to current round)
                 for (let i = 0; i <= gameState.currentRound; i++) {
                     const btn = document.createElement('button');
                     btn.className = 'interactive-btn';
@@ -2096,25 +2067,20 @@
                         btn.classList.add('active');
                     }
                     
-                    // Enhanced click handler with mobile feedback
                     btn.addEventListener('click', function() {
-                        // Remove active class from all buttons for this player
                         document.querySelectorAll(`.interactive-btn[data-player="${player}"]`).forEach(b => {
                             b.classList.remove('active');
                         });
                         
-                        // Add active class to clicked button
                         this.classList.add('active');
                         gameState.tricks[player] = i;
                         
-                        // Add mobile haptic feedback
                         if (navigator.vibrate) {
-                            navigator.vibrate(50);
+                            navigator.vibrate(30);
                         }
                         
                         saveGame();
                         
-                        // Update bid info with enhanced visual comparison
                         const bid = gameState.bids[player] || 0;
                         const tricks = i;
                         if (bid === tricks) {
@@ -2127,20 +2093,8 @@
                             bidInfo.style.boxShadow = '0 4px 12px rgba(239, 68, 68, 0.3)';
                         }
                         
-                        // Show immediate feedback
-                        showNotification(`${player} won ${i} tricks`, 'info', 2000);
-                        
-                        // Update trick total verification
+                        showAdaptiveNotification(`${player} won ${i} tricks`, 'info', 2000);
                         updateTrickTotal();
-                    });
-                    
-                    // Add touch feedback for mobile
-                    btn.addEventListener('touchstart', function() {
-                        this.style.transform = 'scale(0.95)';
-                    });
-                    
-                    btn.addEventListener('touchend', function() {
-                        this.style.transform = '';
                     });
                     
                     buttonContainer.appendChild(btn);
@@ -2150,7 +2104,6 @@
                 trickInputs.appendChild(playerCard);
             });
             
-            // Add trick total verification display
             const trickTotalDisplay = document.createElement('div');
             trickTotalDisplay.id = 'trickTotalDisplay';
             trickTotalDisplay.className = 'total-display neutral';
@@ -2161,7 +2114,6 @@
             `;
             trickInputs.appendChild(trickTotalDisplay);
             
-            // Initialize trick total display
             updateTrickTotal();
         }
 
@@ -2170,7 +2122,6 @@
             let total = 0;
             let tricksCount = 0;
             
-            // Get tricks from gameState
             gameState.players.forEach(player => {
                 const tricks = gameState.tricks[player] || 0;
                 total += tricks;
@@ -2193,7 +2144,6 @@
                     trickTotalDisplay.className = 'total-display invalid';
                     trickTotalStatus.innerHTML = `🚫 INVALID - Must equal ${gameState.currentRound}`;
                     
-                    // Add mobile-specific error animation
                     trickTotalDisplay.style.animation = 'shake 0.5s ease-in-out';
                     setTimeout(() => {
                         trickTotalDisplay.style.animation = '';
@@ -2209,7 +2159,6 @@
         function calculateRound() {
             let allValid = true;
             
-            // Check all players have tricks recorded
             gameState.players.forEach(player => {
                 if (gameState.tricks[player] === undefined) {
                     allValid = false;
@@ -2217,16 +2166,14 @@
             });
             
             if (!allValid) {
-                showNotification('📝 Please record tricks for all players before calculating scores!', 'error', 4000);
+                showAdaptiveNotification('📝 Please record tricks for all players before calculating scores!', 'error', 4000);
                 return;
             }
             
-            // Validate that sum of tricks equals round number
             const totalTricks = gameState.players.reduce((sum, player) => sum + gameState.tricks[player], 0);
             if (totalTricks !== gameState.currentRound) {
-                showNotification(`🚫 Invalid trick count! Total (${totalTricks}) must equal round ${gameState.currentRound}. Please check your recordings.`, 'error', 6000);
+                showAdaptiveNotification(`🚫 Invalid trick count! Total (${totalTricks}) must equal round ${gameState.currentRound}. Please check your recordings.`, 'error', 6000);
                 
-                // Enhanced mobile error feedback
                 const trickButtons = document.querySelectorAll('.interactive-btn');
                 trickButtons.forEach(btn => {
                     btn.style.borderColor = 'var(--danger)';
@@ -2234,7 +2181,6 @@
                     btn.style.animation = 'shake 0.5s ease-in-out';
                 });
                 
-                // Clear highlighting after 3 seconds
                 setTimeout(() => {
                     trickButtons.forEach(btn => {
                         btn.style.borderColor = '';
@@ -2246,7 +2192,6 @@
                 return;
             }
             
-            // Calculate scores based on game mode
             gameState.players.forEach(player => {
                 const bid = gameState.bids[player];
                 const tricks = gameState.tricks[player];
@@ -2305,11 +2250,9 @@
                 gameState.scores[player] += points;
             });
             
-            // Update UI
             updateScoreboard();
             
-            // Check if game is over
-            if (gameState.currentRound >= gameState.totalRound) {
+            if (gameState.currentRound >= gameState.totalRounds) {
                 declareWinner();
             } else {
                 nextRoundBtn.style.display = 'inline-block';
@@ -2318,8 +2261,7 @@
             
             saveGame();
             
-            // Show success notification
-            showNotification('Round completed! Scores updated successfully!', 'success', 4000);
+            showAdaptiveNotification('Round completed! Scores updated successfully!', 'success', 4000);
         }
 
         // Advance to next round
@@ -2329,7 +2271,6 @@
             gameState.bids = {};
             gameState.tricks = {};
             
-            // Update UI
             currentRoundEl.textContent = gameState.currentRound;
             updateScoreboard();
             createBidInputs();
@@ -2342,13 +2283,11 @@
             
             saveGame();
             
-            // Show success notification
-            showNotification('Next round started! Good luck!', 'success', 3000);
+            showAdaptiveNotification('Next round started! Good luck!', 'success', 3000);
         }
 
         // End game and reset scores/bids
         function endGame() {
-            // Reset scores and bids but keep players and game structure
             gameState.scores = {};
             gameState.bids = {};
             gameState.tricks = {};
@@ -2356,292 +2295,285 @@
             gameState.gamePhase = 'bidding';
             gameState.gameStarted = false;
             
-            // Clear localStorage
             localStorage.removeItem('wizardGame');
             
-            // Hide game end elements
             winnerBanner.style.display = 'none';
             gameEndActions.style.display = 'none';
             
-            // Reset UI
             currentRoundEl.textContent = '1';
             updateScoreboard();
             
-            // Show bidding phase
             document.getElementById('biddingPhase').style.display = 'block';
             document.getElementById('playingPhase').style.display = 'none';
             submitBidsBtn.style.display = 'inline-block';
             calculateRoundBtn.style.display = 'none';
             nextRoundBtn.style.display = 'none';
             
-            // Create new bid inputs
             createBidInputs();
-            
-            // Show setup section to start a new game
             showSection('setup');
             
-            // Show success notification
-            showNotification('Game ended and scores reset! Ready for a new game!', 'success', 4000);
+            showAdaptiveNotification('Game ended and scores reset! Ready for a new game!', 'success', 4000);
         }
 
-                 // Clear game and start fresh
-         function clearGame() {
-             // Reset game state
-             gameState.players = [];
-             gameState.currentRound = 1;
-             gameState.totalRounds = 10;
-             gameState.bids = {};
-             gameState.tricks = {};
-             gameState.scores = {};
-             gameState.gamePhase = 'bidding';
-             gameState.gameStarted = false;
-             
-             // Clear localStorage
-             localStorage.removeItem('wizardGame');
-             
-             // Hide game end elements
-             winnerBanner.style.display = 'none';
-             gameEndActions.style.display = 'none';
-             
-             // Reset UI
-             currentRoundEl.textContent = '1';
-             totalRoundsEl.textContent = '10';
-             
-             // Clear player inputs
-             const playerInputs = document.querySelectorAll('.player-input input');
-             playerInputs.forEach(input => {
-                 input.value = '';
-             });
-             
-             // Reset game mode selection
-             handleGameModeSelection('classic');
-             
-                         // Show setup section
+        // Clear game and start fresh
+        function clearGame() {
+            gameState.players = [];
+            gameState.currentRound = 1;
+            gameState.totalRounds = 10;
+            gameState.bids = {};
+            gameState.tricks = {};
+            gameState.scores = {};
+            gameState.gamePhase = 'bidding';
+            gameState.gameStarted = false;
+            
+            localStorage.removeItem('wizardGame');
+            
+            winnerBanner.style.display = 'none';
+            gameEndActions.style.display = 'none';
+            
+            currentRoundEl.textContent = '1';
+            totalRoundsEl.textContent = '10';
+            
+            const playerInputs = document.querySelectorAll('.player-input input');
+            playerInputs.forEach(input => {
+                input.value = '';
+            });
+            
+            handleGameModeSelection('classic');
             showSection('setup');
             
-            // Show success notification
-            showNotification('Game cleared! Ready to start a fresh adventure!', 'success', 4000);
-         }
-         
-         // Declare winner when game ends
-         function declareWinner() {
-             let highestScore = -Infinity;
-             let winners = [];
-             
-             gameState.players.forEach(player => {
-                 if (gameState.scores[player] > highestScore) {
-                     highestScore = gameState.scores[player];
-                     winners = [player];
-                 } else if (gameState.scores[player] === highestScore) {
-                     winners.push(player);
-                 }
-             });
-             
-             if (winners.length === 1) {
-                 winnerBanner.textContent = `🏆 Winner: ${winners[0]} with ${highestScore} points! 🏆`;
-             } else {
-                 winnerBanner.textContent = `🏆 Tie between ${winners.join(' and ')} with ${highestScore} points each! 🏆`;
-             }
-             
-             winnerBanner.style.display = 'block';
-             gameEndActions.style.display = 'block';
-             nextRoundBtn.style.display = 'none';
-             
-             // Clear saved game
-             localStorage.removeItem('wizardGame');
-         }
-
-        // Event listeners
-        navTabs.forEach(btn => {
-            btn.addEventListener('click', function() {
-                const mode = this.dataset.mode;
-                showSection(mode);
-            });
-        });
-
-                 addPlayerBtn.addEventListener('click', addPlayerInput);
-         startGameBtn.addEventListener('click', startGame);
-         submitBidsBtn.addEventListener('click', submitBids);
-         calculateRoundBtn.addEventListener('click', calculateRound);
-         nextRoundBtn.addEventListener('click', nextRound);
-         clearGameBtn.addEventListener('click', clearGame);
-         endGameBtn.addEventListener('click', endGame);
-         roundsSelect.addEventListener('change', handleRoundsSelection);
+            showAdaptiveNotification('Game cleared! Ready to start a fresh adventure!', 'success', 4000);
+        }
         
-                 // Add event listeners for mode cards
-         modeCards.forEach(card => {
-             card.addEventListener('click', function() {
-                 const selectedMode = this.dataset.mode;
-                 handleGameModeSelection(selectedMode);
-             });
-         });
-         
-         // Add event listeners for help buttons
-         helpBtns.forEach(btn => {
-             btn.addEventListener('click', function(e) {
-                 e.stopPropagation(); // Prevent card selection when clicking help
-                 const mode = this.dataset.mode;
-                 showHelp(mode);
-             });
-         });
-         
-         // Modal event listeners
-         closeModal.addEventListener('click', closeHelp);
-         helpModal.addEventListener('click', function(e) {
-             if (e.target === helpModal) {
-                 closeHelp();
-             }
-         });
-        backToGameBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                if (gameState.gameStarted) {
-                    showSection('play');
-                } else {
-                    showSection('setup');
+        // Declare winner when game ends
+        function declareWinner() {
+            let highestScore = -Infinity;
+            let winners = [];
+            
+            gameState.players.forEach(player => {
+                if (gameState.scores[player] > highestScore) {
+                    highestScore = gameState.scores[player];
+                    winners = [player];
+                } else if (gameState.scores[player] === highestScore) {
+                    winners.push(player);
                 }
             });
-        });
+            
+            if (winners.length === 1) {
+                winnerBanner.textContent = `🏆 Winner: ${winners[0]} with ${highestScore} points! 🏆`;
+            } else {
+                winnerBanner.textContent = `🏆 Tie between ${winners.join(' and ')} with ${highestScore} points each! 🏆`;
+            }
+            
+            winnerBanner.style.display = 'block';
+            gameEndActions.style.display = 'block';
+            nextRoundBtn.style.display = 'none';
+            
+            localStorage.removeItem('wizardGame');
+        }
 
-                 // Help content for each game mode
-         const helpContent = {
-             classic: {
-                 title: "Classic Wizard",
-                 content: `
-                     <h4>🎯 The Original Experience</h4>
-                     <p>This is the traditional Wizard scoring system that balances risk and reward.</p>
-                     
-                     <h4>📊 Scoring System</h4>
-                     <ul>
-                         <li><strong>Correct Bid:</strong> 20 base points + 10 points per trick won</li>
-                         <li><strong>Incorrect Bid:</strong> Lose 10 points for each trick over or under</li>
-                     </ul>
-                     
-                     <div class="example-box">
-                         <strong>Examples:</strong><br>
-                         • Bid 3, win 3 tricks → <strong>50 points</strong> (20 + 30)<br>
-                         • Bid 2, win 4 tricks → <strong>-20 points</strong> (10 × -2)<br>
-                         • Bid 0, win 0 tricks → <strong>20 points</strong> (20 + 0)
-                     </div>
-                     
-                     <h4>🎮 Perfect For</h4>
-                     <p>New players and those who want the authentic Wizard experience with balanced scoring.</p>
-                 `
-             },
-             quick: {
-                 title: "Quick Play",
-                 content: `
-                     <h4>⚡ Fast & Furious</h4>
-                     <p>A faster-paced version with quicker scoring and shorter games.</p>
-                     
-                     <h4>📊 Scoring System</h4>
-                     <ul>
-                         <li><strong>Correct Bid:</strong> 15 base points + 8 points per trick won</li>
-                         <li><strong>Incorrect Bid:</strong> Lose 8 points for each trick over or under</li>
-                     </ul>
-                     
-                     <div class="example-box">
-                         <strong>Examples:</strong><br>
-                         • Bid 3, win 3 tricks → <strong>39 points</strong> (15 + 24)<br>
-                         • Bid 2, win 4 tricks → <strong>-16 points</strong> (8 × -2)<br>
-                         • Bid 0, win 0 tricks → <strong>15 points</strong> (15 + 0)
-                     </div>
-                     
-                     <h4>🎮 Perfect For</h4>
-                     <p>Quick gaming sessions and players who want faster-paced games with less dramatic score swings.</p>
-                 `
-             },
-             expert: {
-                 title: "Expert Mode",
-                 content: `
-                     <h4>🧙‍♂️ High Stakes Wizardry</h4>
-                     <p>For experienced players who want bigger rewards and bigger risks.</p>
-                     
-                     <h4>📊 Scoring System</h4>
-                     <ul>
-                         <li><strong>Correct Bid:</strong> 25 base points + 12 points per trick won</li>
-                         <li><strong>Incorrect Bid:</strong> Lose 15 points for each trick over or under</li>
-                     </ul>
-                     
-                     <div class="example-box">
-                         <strong>Examples:</strong><br>
-                         • Bid 3, win 3 tricks → <strong>61 points</strong> (25 + 36)<br>
-                         • Bid 2, win 4 tricks → <strong>-30 points</strong> (15 × -2)<br>
-                         • Bid 0, win 0 tricks → <strong>25 points</strong> (25 + 0)
-                     </div>
-                     
-                     <h4>🎮 Perfect For</h4>
-                     <p>Experienced players who want more dramatic score swings and higher stakes gameplay.</p>
-                 `
-             },
-             team: {
-                 title: "Team Play",
-                 content: `
-                     <h4>🤝 Unite & Conquer</h4>
-                     <p>Play in teams with shared scoring and collaborative strategy.</p>
-                     
-                     <h4>📊 Scoring System</h4>
-                     <ul>
-                         <li><strong>Correct Bid:</strong> 20 base points + 10 points per trick won</li>
-                         <li><strong>Incorrect Bid:</strong> Lose 10 points for each trick over or under</li>
-                         <li><strong>Team Scoring:</strong> Team members share the same score</li>
-                     </ul>
-                     
-                     <div class="example-box">
-                         <strong>Examples:</strong><br>
-                         • Team A: Both bid 2, both win 2 → <strong>50 points each</strong><br>
-                         • Team B: Both bid 1, one wins 2, one wins 0 → <strong>-10 points each</strong><br>
-                         • Team coordination is key to success!
-                     </div>
-                     
-                     <h4>🎮 Perfect For</h4>
-                     <p>Groups who want to work together and enjoy collaborative gameplay with shared victories.</p>
-                 `
-             },
-             tournament: {
-                 title: "Tournament",
-                 content: `
-                     <h4>🏆 Ultimate Challenge</h4>
-                     <p>The highest stakes mode with maximum scoring potential and risk.</p>
-                     
-                     <h4>📊 Scoring System</h4>
-                     <ul>
-                         <li><strong>Correct Bid:</strong> 30 base points + 15 points per trick won</li>
-                         <li><strong>Incorrect Bid:</strong> Lose 20 points for each trick over or under</li>
-                     </ul>
-                     
-                     <div class="example-box">
-                         <strong>Examples:</strong><br>
-                         • Bid 3, win 3 tricks → <strong>75 points</strong> (30 + 45)<br>
-                         • Bid 2, win 4 tricks → <strong>-40 points</strong> (20 × -2)<br>
-                         • Bid 0, win 0 tricks → <strong>30 points</strong> (30 + 0)
-                     </div>
-                     
-                     <h4>🎮 Perfect For</h4>
-                     <p>Competitive players and tournaments where dramatic score swings create exciting gameplay.</p>
-                 `
-             }
-         };
-         
-         // Show help modal
-         function showHelp(mode) {
-             const content = helpContent[mode];
-             if (content) {
-                 modalTitle.textContent = content.title;
-                 modalContent.innerHTML = content.content;
-                 helpModal.style.display = 'flex';
-             }
-         }
-         
-         // Close help modal
-         function closeHelp() {
-             helpModal.style.display = 'none';
-         }
-         
-         // Initialize
-         loadGame();
-         
-         // Set default mode selection
-         handleGameModeSelection('classic');
+        // Help content for each game mode
+        const helpContent = {
+            classic: {
+                title: "Classic Wizard",
+                content: `
+                    <h4>🎯 The Original Experience</h4>
+                    <p>This is the traditional Wizard scoring system that balances risk and reward.</p>
+                    
+                    <h4>📊 Scoring System</h4>
+                    <ul>
+                        <li><strong>Correct Bid:</strong> 20 base points + 10 points per trick won</li>
+                        <li><strong>Incorrect Bid:</strong> Lose 10 points for each trick over or under</li>
+                    </ul>
+                    
+                    <div class="example-box">
+                        <strong>Examples:</strong><br>
+                        • Bid 3, win 3 tricks → <strong>50 points</strong> (20 + 30)<br>
+                        • Bid 2, win 4 tricks → <strong>-20 points</strong> (10 × -2)<br>
+                        • Bid 0, win 0 tricks → <strong>20 points</strong> (20 + 0)
+                    </div>
+                    
+                    <h4>🎮 Perfect For</h4>
+                    <p>New players and those who want the authentic Wizard experience with balanced scoring.</p>
+                `
+            },
+            quick: {
+                title: "Quick Play",
+                content: `
+                    <h4>⚡ Fast & Furious</h4>
+                    <p>A faster-paced version with quicker scoring and shorter games.</p>
+                    
+                    <h4>📊 Scoring System</h4>
+                    <ul>
+                        <li><strong>Correct Bid:</strong> 15 base points + 8 points per trick won</li>
+                        <li><strong>Incorrect Bid:</strong> Lose 8 points for each trick over or under</li>
+                    </ul>
+                    
+                    <div class="example-box">
+                        <strong>Examples:</strong><br>
+                        • Bid 3, win 3 tricks → <strong>39 points</strong> (15 + 24)<br>
+                        • Bid 2, win 4 tricks → <strong>-16 points</strong> (8 × -2)<br>
+                        • Bid 0, win 0 tricks → <strong>15 points</strong> (15 + 0)
+                    </div>
+                    
+                    <h4>🎮 Perfect For</h4>
+                    <p>Quick gaming sessions and players who want faster-paced games with less dramatic score swings.</p>
+                `
+            },
+            expert: {
+                title: "Expert Mode",
+                content: `
+                    <h4>🧙‍♂️ High Stakes Wizardry</h4>
+                    <p>For experienced players who want bigger rewards and bigger risks.</p>
+                    
+                    <h4>📊 Scoring System</h4>
+                    <ul>
+                        <li><strong>Correct Bid:</strong> 25 base points + 12 points per trick won</li>
+                        <li><strong>Incorrect Bid:</strong> Lose 15 points for each trick over or under</li>
+                    </ul>
+                    
+                    <div class="example-box">
+                        <strong>Examples:</strong><br>
+                        • Bid 3, win 3 tricks → <strong>61 points</strong> (25 + 36)<br>
+                        • Bid 2, win 4 tricks → <strong>-30 points</strong> (15 × -2)<br>
+                        • Bid 0, win 0 tricks → <strong>25 points</strong> (25 + 0)
+                    </div>
+                    
+                    <h4>🎮 Perfect For</h4>
+                    <p>Experienced players who want more dramatic score swings and higher stakes gameplay.</p>
+                `
+            },
+            team: {
+                title: "Team Play",
+                content: `
+                    <h4>🤝 Unite & Conquer</h4>
+                    <p>Play in teams with shared scoring and collaborative strategy.</p>
+                    
+                    <h4>📊 Scoring System</h4>
+                    <ul>
+                        <li><strong>Correct Bid:</strong> 20 base points + 10 points per trick won</li>
+                        <li><strong>Incorrect Bid:</strong> Lose 10 points for each trick over or under</li>
+                        <li><strong>Team Scoring:</strong> Team members share the same score</li>
+                    </ul>
+                    
+                    <div class="example-box">
+                        <strong>Examples:</strong><br>
+                        • Team A: Both bid 2, both win 2 → <strong>50 points each</strong><br>
+                        • Team B: Both bid 1, one wins 2, one wins 0 → <strong>-10 points each</strong><br>
+                        • Team coordination is key to success!
+                    </div>
+                    
+                    <h4>🎮 Perfect For</h4>
+                    <p>Groups who want to work together and enjoy collaborative gameplay with shared victories.</p>
+                `
+            },
+            tournament: {
+                title: "Tournament",
+                content: `
+                    <h4>🏆 Ultimate Challenge</h4>
+                    <p>The highest stakes mode with maximum scoring potential and risk.</p>
+                    
+                    <h4>📊 Scoring System</h4>
+                    <ul>
+                        <li><strong>Correct Bid:</strong> 30 base points + 15 points per trick won</li>
+                        <li><strong>Incorrect Bid:</strong> Lose 20 points for each trick over or under</li>
+                    </ul>
+                    
+                    <div class="example-box">
+                        <strong>Examples:</strong><br>
+                        • Bid 3, win 3 tricks → <strong>75 points</strong> (30 + 45)<br>
+                        • Bid 2, win 4 tricks → <strong>-40 points</strong> (20 × -2)<br>
+                        • Bid 0, win 0 tricks → <strong>30 points</strong> (30 + 0)
+                    </div>
+                    
+                    <h4>🎮 Perfect For</h4>
+                    <p>Competitive players and tournaments where dramatic score swings create exciting gameplay.</p>
+                `
+            }
+        };
+        
+        // Show help modal
+        function showHelp(mode) {
+            const content = helpContent[mode];
+            if (content) {
+                modalTitle.textContent = content.title;
+                modalContent.innerHTML = content.content;
+                helpModal.style.display = 'flex';
+            }
+        }
+        
+        // Close help modal
+        function closeHelp() {
+            helpModal.style.display = 'none';
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadGame();
+            setupMobileInteractions();
+            handleGameModeSelection('classic');
+            
+            // Event listeners
+            navTabs.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const mode = this.dataset.mode;
+                    showSection(mode);
+                });
+            });
+
+            addPlayerBtn.addEventListener('click', addPlayerInput);
+            startGameBtn.addEventListener('click', startGame);
+            submitBidsBtn.addEventListener('click', submitBids);
+            calculateRoundBtn.addEventListener('click', calculateRound);
+            nextRoundBtn.addEventListener('click', nextRound);
+            clearGameBtn.addEventListener('click', clearGame);
+            endGameBtn.addEventListener('click', endGame);
+            roundsSelect.addEventListener('change', handleRoundsSelection);
+            
+            modeCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const selectedMode = this.dataset.mode;
+                    handleGameModeSelection(selectedMode);
+                });
+            });
+            
+            helpBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const mode = this.dataset.mode;
+                    showHelp(mode);
+                });
+            });
+            
+            closeModal.addEventListener('click', closeHelp);
+            helpModal.addEventListener('click', function(e) {
+                if (e.target === helpModal) {
+                    closeHelp();
+                }
+            });
+            
+            backToGameBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (gameState.gameStarted) {
+                        showSection('play');
+                    } else {
+                        showSection('setup');
+                    }
+                });
+            });
+            
+            // Add touch feedback for all buttons
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.95)';
+                });
+                
+                btn.addEventListener('touchend', function() {
+                    this.style.transform = '';
+                });
+            });
+        });
     </script>
 </body>
 </html>
