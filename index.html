@@ -1812,32 +1812,94 @@
         function createBidInputs() {
             bidInputs.innerHTML = '';
             
+            // Create bid input table
+            const bidTable = document.createElement('table');
+            bidTable.className = 'bid-table';
+            bidTable.style.cssText = `
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 2rem;
+                background: var(--surface);
+                border-radius: 1rem;
+                overflow: hidden;
+                box-shadow: var(--shadow);
+            `;
+            
+            // Create table header
+            const tableHeader = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            headerRow.style.cssText = `
+                background: var(--primary);
+                color: white;
+            `;
+            
+            const playerHeader = document.createElement('th');
+            playerHeader.textContent = 'Player';
+            playerHeader.style.cssText = `
+                padding: 1rem;
+                text-align: left;
+                font-weight: 600;
+                border-bottom: 1px solid var(--border);
+            `;
+            
+            const bidHeader = document.createElement('th');
+            bidHeader.textContent = 'Bid Selection';
+            bidHeader.style.cssText = `
+                padding: 1rem;
+                text-align: center;
+                font-weight: 600;
+                border-bottom: 1px solid var(--border);
+            `;
+            
+            headerRow.appendChild(playerHeader);
+            headerRow.appendChild(bidHeader);
+            tableHeader.appendChild(headerRow);
+            bidTable.appendChild(tableHeader);
+            
+            // Create table body
+            const tableBody = document.createElement('tbody');
+            
             gameState.players.forEach((player, index) => {
-                const playerCard = document.createElement('div');
-                playerCard.className = 'player-card';
-                
-                const playerHeader = document.createElement('div');
-                playerHeader.className = 'player-header';
-                
-                const playerName = document.createElement('div');
-                playerName.className = 'player-name';
-                playerName.textContent = `👤 ${player}`;
-                
-                const bidLabel = document.createElement('div');
-                bidLabel.textContent = '🎲 Select Your Bid:';
-                bidLabel.style.cssText = `
-                    font-weight: 600;
-                    color: var(--text);
-                    font-size: 1rem;
-                    margin-top: 0.5rem;
+                const tableRow = document.createElement('tr');
+                tableRow.style.cssText = `
+                    border-bottom: 1px solid var(--border);
+                    transition: background-color 0.2s ease;
                 `;
                 
-                playerHeader.appendChild(playerName);
-                playerHeader.appendChild(bidLabel);
-                playerCard.appendChild(playerHeader);
+                tableRow.addEventListener('mouseenter', function() {
+                    this.style.backgroundColor = 'rgba(99, 102, 241, 0.05)';
+                });
+                
+                tableRow.addEventListener('mouseleave', function() {
+                    this.style.backgroundColor = '';
+                });
+                
+                // Player name cell
+                const playerCell = document.createElement('td');
+                playerCell.textContent = `👤 ${player}`;
+                playerCell.style.cssText = `
+                    padding: 1rem;
+                    font-weight: 600;
+                    color: var(--text);
+                    border-right: 1px solid var(--border);
+                `;
+                
+                // Bid selection cell
+                const bidCell = document.createElement('td');
+                bidCell.style.cssText = `
+                    padding: 1rem;
+                    text-align: center;
+                `;
                 
                 const buttonContainer = document.createElement('div');
                 buttonContainer.className = 'button-container';
+                buttonContainer.style.cssText = `
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 0.5rem;
+                    flex-wrap: wrap;
+                `;
                 
                 for (let bidValue = 0; bidValue <= gameState.currentRound; bidValue++) {
                     const bidButton = document.createElement('button');
@@ -1905,9 +1967,14 @@
                     buttonContainer.appendChild(bidButton);
                 }
                 
-                playerCard.appendChild(buttonContainer);
-                bidInputs.appendChild(playerCard);
+                bidCell.appendChild(buttonContainer);
+                tableRow.appendChild(playerCell);
+                tableRow.appendChild(bidCell);
+                tableBody.appendChild(tableRow);
             });
+            
+            bidTable.appendChild(tableBody);
+            bidInputs.appendChild(bidTable);
             
             const totalDisplay = document.createElement('div');
             totalDisplay.id = 'bidTotalDisplay';
@@ -2014,40 +2081,126 @@
             submitBidsBtn.style.display = 'none';
             calculateRoundBtn.style.display = 'inline-block';
             
-            trickInputs.innerHTML = '';
+            // Create trick input table
+            const trickTable = document.createElement('table');
+            trickTable.className = 'trick-table';
+            trickTable.style.cssText = `
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 2rem;
+                background: var(--surface);
+                border-radius: 1rem;
+                overflow: hidden;
+                box-shadow: var(--shadow);
+            `;
+            
+            // Create table header
+            const tableHeader = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            headerRow.style.cssText = `
+                background: var(--primary);
+                color: white;
+            `;
+            
+            const playerHeader = document.createElement('th');
+            playerHeader.textContent = 'Player';
+            playerHeader.style.cssText = `
+                padding: 1rem;
+                text-align: left;
+                font-weight: 600;
+                border-bottom: 1px solid var(--border);
+            `;
+            
+            const bidHeader = document.createElement('th');
+            bidHeader.textContent = 'Bid';
+            bidHeader.style.cssText = `
+                padding: 1rem;
+                text-align: center;
+                font-weight: 600;
+                border-bottom: 1px solid var(--border);
+            `;
+            
+            const trickHeader = document.createElement('th');
+            trickHeader.textContent = 'Tricks Won';
+            trickHeader.style.cssText = `
+                padding: 1rem;
+                text-align: center;
+                font-weight: 600;
+                border-bottom: 1px solid var(--border);
+            `;
+            
+            headerRow.appendChild(playerHeader);
+            headerRow.appendChild(bidHeader);
+            headerRow.appendChild(trickHeader);
+            tableHeader.appendChild(headerRow);
+            trickTable.appendChild(tableHeader);
+            
+            // Create table body
+            const tableBody = document.createElement('tbody');
             
             gameState.players.forEach((player, index) => {
-                const playerCard = document.createElement('div');
-                playerCard.className = 'player-card';
+                const tableRow = document.createElement('tr');
+                tableRow.style.cssText = `
+                    border-bottom: 1px solid var(--border);
+                    transition: background-color 0.2s ease;
+                `;
                 
-                const playerHeader = document.createElement('div');
-                playerHeader.className = 'player-header';
+                tableRow.addEventListener('mouseenter', function() {
+                    this.style.backgroundColor = 'rgba(99, 102, 241, 0.05)';
+                });
                 
-                const playerName = document.createElement('div');
-                playerName.className = 'player-name';
-                playerName.textContent = `👤 ${player}`;
+                tableRow.addEventListener('mouseleave', function() {
+                    this.style.backgroundColor = '';
+                });
+                
+                // Player name cell
+                const playerCell = document.createElement('td');
+                playerCell.textContent = `👤 ${player}`;
+                playerCell.style.cssText = `
+                    padding: 1rem;
+                    font-weight: 600;
+                    color: var(--text);
+                    border-right: 1px solid var(--border);
+                `;
+                
+                // Bid info cell
+                const bidCell = document.createElement('td');
+                bidCell.style.cssText = `
+                    padding: 1rem;
+                    text-align: center;
+                    border-right: 1px solid var(--border);
+                `;
                 
                 const bidInfo = document.createElement('div');
                 bidInfo.className = 'bid-info';
-                bidInfo.textContent = `Bid: ${gameState.bids[player] || 0}`;
-                
-                playerHeader.appendChild(playerName);
-                playerHeader.appendChild(bidInfo);
-                playerCard.appendChild(playerHeader);
-                
-                const trickLabel = document.createElement('div');
-                trickLabel.textContent = '🎯 Tricks Won:';
-                trickLabel.style.cssText = `
+                bidInfo.textContent = `${gameState.bids[player] || 0}`;
+                bidInfo.style.cssText = `
+                    background: var(--accent);
+                    color: white;
+                    padding: 0.5rem 1rem;
+                    border-radius: 2rem;
                     font-weight: 600;
-                    color: var(--text);
-                    margin: 1rem 0;
-                    font-size: 1.1rem;
+                    font-size: 0.875rem;
+                    display: inline-block;
+                `;
+                bidCell.appendChild(bidInfo);
+                
+                // Trick selection cell
+                const trickCell = document.createElement('td');
+                trickCell.style.cssText = `
+                    padding: 1rem;
                     text-align: center;
                 `;
-                playerCard.appendChild(trickLabel);
                 
                 const buttonContainer = document.createElement('div');
                 buttonContainer.className = 'button-container';
+                buttonContainer.style.cssText = `
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 0.5rem;
+                    flex-wrap: wrap;
+                `;
                 
                 for (let i = 0; i <= gameState.currentRound; i++) {
                     const btn = document.createElement('button');
@@ -2079,11 +2232,11 @@
                         const tricks = i;
                         if (bid === tricks) {
                             bidInfo.style.background = 'linear-gradient(135deg, var(--success), #059669)';
-                            bidInfo.textContent = `Bid: ${bid} ✓ Perfect!`;
+                            bidInfo.textContent = `${bid} ✓`;
                             bidInfo.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.3)';
                         } else {
                             bidInfo.style.background = 'linear-gradient(135deg, var(--danger), #dc2626)';
-                            bidInfo.textContent = `Bid: ${bid} ✗ Got ${tricks}`;
+                            bidInfo.textContent = `${bid} ✗ ${tricks}`;
                             bidInfo.style.boxShadow = '0 4px 12px rgba(239, 68, 68, 0.3)';
                         }
                         
@@ -2094,9 +2247,15 @@
                     buttonContainer.appendChild(btn);
                 }
                 
-                playerCard.appendChild(buttonContainer);
-                trickInputs.appendChild(playerCard);
+                trickCell.appendChild(buttonContainer);
+                tableRow.appendChild(playerCell);
+                tableRow.appendChild(bidCell);
+                tableRow.appendChild(trickCell);
+                tableBody.appendChild(tableRow);
             });
+            
+            trickTable.appendChild(tableBody);
+            trickInputs.appendChild(trickTable);
             
             const trickTotalDisplay = document.createElement('div');
             trickTotalDisplay.id = 'trickTotalDisplay';
