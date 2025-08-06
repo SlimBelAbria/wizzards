@@ -615,6 +615,23 @@
             color: white;
         }
         
+        /* Dealer Info */
+        .dealer-info {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .dealer-badge {
+            background: linear-gradient(135deg, var(--accent), #d97706);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 1rem;
+            display: inline-block;
+            box-shadow: var(--shadow);
+        }
+        
         /* Winner Banner */
         .winner-banner {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -1263,6 +1280,12 @@
             
             <div class="content-section play-section">
                 <div class="game-board">
+                    <div class="dealer-info">
+                        <div class="dealer-badge">
+                            🃏 Dealer: <span id="currentDealer">Player 1</span>
+                        </div>
+                    </div>
+                    
                     <table class="scoreboard">
                         <thead>
                             <tr>
@@ -1782,6 +1805,9 @@
                 currentRoundTable.textContent = gameState.currentRound;
             }
             
+            // Update dealer info
+            updateDealerInfo();
+            
             scoreboardBody.innerHTML = '';
             
             gameState.players.forEach(player => {
@@ -1806,6 +1832,18 @@
                 
                 scoreboardBody.appendChild(row);
             });
+        }
+        
+        // Update dealer information
+        function updateDealerInfo() {
+            const currentDealer = document.getElementById('currentDealer');
+            if (currentDealer && gameState.players.length > 0) {
+                // Dealer rotates clockwise each round
+                // Round 1: Player 1 deals, Round 2: Player 2 deals, etc.
+                const dealerIndex = (gameState.currentRound - 1) % gameState.players.length;
+                const dealer = gameState.players[dealerIndex];
+                currentDealer.textContent = dealer;
+            }
         }
 
         // Create bid input fields
