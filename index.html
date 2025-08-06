@@ -1263,15 +1263,11 @@
             
             <div class="content-section play-section">
                 <div class="game-board">
-                    <div class="round-info">
-                        Round <span id="currentRound">1</span> of <span id="totalRounds">10</span>
-                    </div>
-                    
                     <table class="scoreboard">
                         <thead>
                             <tr>
                                 <th>Player</th>
-                                <th>Bid</th>
+                                <th>Round <span id="currentRoundTable">1</span> Bid</th>
                                 <th>Tricks</th>
                                 <th>Score</th>
                             </tr>
@@ -1290,14 +1286,6 @@
                             </div>
                         </div>
                         
-                        <div class="instructions">
-                            <p>Predict how many tricks each player will win this round</p>
-                            <div class="tips">
-                                <span class="tip">Each player bids based on their cards</span>
-                                <span class="tip">Total bids cannot equal the round number</span>
-                            </div>
-                        </div>
-                        
                         <div id="bidInputs"></div>
                     </div>
                     
@@ -1307,14 +1295,6 @@
                             <div class="phase-indicator">
                                 <span class="phase-dot active"></span>
                                 <span class="phase-dot"></span>
-                            </div>
-                        </div>
-                        
-                        <div class="instructions">
-                            <p>Record the tricks each player won this round</p>
-                            <div class="tips">
-                                <span class="tip">Click the number of tricks each player actually won</span>
-                                <span class="tip">Compare with their bids to calculate scores</span>
                             </div>
                         </div>
                         
@@ -1587,8 +1567,7 @@
         const submitBidsBtn = document.getElementById('submitBidsBtn');
         const calculateRoundBtn = document.getElementById('calculateRoundBtn');
         const nextRoundBtn = document.getElementById('nextRoundBtn');
-        const currentRoundEl = document.getElementById('currentRound');
-        const totalRoundsEl = document.getElementById('totalRounds');
+
         const winnerBanner = document.getElementById('winnerBanner');
         const gameEndActions = document.getElementById('gameEndActions');
         const endGameBtn = document.getElementById('endGameBtn');
@@ -1618,8 +1597,6 @@
                     Object.assign(gameState, parsed);
                     gameState.gameStarted = true;
                     
-                    currentRoundEl.textContent = gameState.currentRound;
-                    totalRoundsEl.textContent = gameState.totalRounds;
                     updateScoreboard();
                     
                     if (gameState.gamePhase === 'playing') {
@@ -1786,8 +1763,6 @@
                     gameState.scores[player] = 0;
                 });
                 
-                currentRoundEl.textContent = gameState.currentRound;
-                totalRoundsEl.textContent = gameState.totalRounds;
                 updateScoreboard();
                 createBidInputs();
                 
@@ -1801,6 +1776,12 @@
 
         // Update scoreboard display
         function updateScoreboard() {
+            // Update the table header with current round
+            const currentRoundTable = document.getElementById('currentRoundTable');
+            if (currentRoundTable) {
+                currentRoundTable.textContent = gameState.currentRound;
+            }
+            
             scoreboardBody.innerHTML = '';
             
             gameState.players.forEach(player => {
@@ -1830,16 +1811,6 @@
         // Create bid input fields
         function createBidInputs() {
             bidInputs.innerHTML = '';
-            
-            const roundInfo = document.createElement('div');
-            roundInfo.className = 'instructions';
-            roundInfo.innerHTML = `
-                <p><strong>Round ${gameState.currentRound}</strong>: Each player can bid 0 to ${gameState.currentRound} tricks</p>
-                <div class="tips">
-                    <span class="tip">🎯 Tap the number buttons to select your bid</span>
-                    <span class="tip">⚠️ Important: The sum of all bids cannot equal ${gameState.currentRound}</span>
-                </div>`;
-            bidInputs.appendChild(roundInfo);
             
             gameState.players.forEach((player, index) => {
                 const playerCard = document.createElement('div');
@@ -2044,16 +2015,6 @@
             calculateRoundBtn.style.display = 'inline-block';
             
             trickInputs.innerHTML = '';
-            
-            const playingInstructions = document.createElement('div');
-            playingInstructions.className = 'instructions';
-            playingInstructions.innerHTML = `
-                <p><strong>Round ${gameState.currentRound} - Playing Phase</strong>: Record the tricks each player actually won</p>
-                <div class="tips">
-                    <span class="tip">🎯 Tap the number buttons to record tricks won</span>
-                    <span class="tip">📊 The total tricks must equal ${gameState.currentRound}</span>
-                </div>`;
-            trickInputs.appendChild(playingInstructions);
             
             gameState.players.forEach((player, index) => {
                 const playerCard = document.createElement('div');
@@ -2304,7 +2265,6 @@
             gameState.bids = {};
             gameState.tricks = {};
             
-            currentRoundEl.textContent = gameState.currentRound;
             updateScoreboard();
             createBidInputs();
             
@@ -2333,7 +2293,6 @@
             winnerBanner.style.display = 'none';
             gameEndActions.style.display = 'none';
             
-            currentRoundEl.textContent = '1';
             updateScoreboard();
             
             document.getElementById('biddingPhase').style.display = 'block';
@@ -2364,8 +2323,7 @@
             winnerBanner.style.display = 'none';
             gameEndActions.style.display = 'none';
             
-            currentRoundEl.textContent = '1';
-            totalRoundsEl.textContent = '10';
+
             
             const playerInputs = document.querySelectorAll('.player-input input');
             playerInputs.forEach(input => {
