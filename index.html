@@ -634,6 +634,62 @@
             50% { transform: scale(1.02); }
         }
         
+        /* Mobile Verification Screen */
+        .mobile-verification-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 1rem;
+        }
+        
+        /* Hide mobile verification on desktop */
+        @media (min-width: 768px) {
+            .mobile-verification-overlay {
+                display: none !important;
+            }
+        }
+        
+        .mobile-verification-content {
+            background: var(--surface);
+            border-radius: 1.5rem;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--border);
+        }
+        
+        .verification-header {
+            background: var(--primary);
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .verification-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+        
+        .verification-actions {
+            padding: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
         /* Modal */
         .modal-overlay {
             position: fixed;
@@ -1287,6 +1343,23 @@
                         </div>
                         
                         <div id="bidInputs"></div>
+                        
+                        <!-- Mobile bid verification screen -->
+                        <div id="mobileBidVerification" style="display: none;">
+                            <div class="mobile-verification-overlay">
+                                <div class="mobile-verification-content">
+                                    <div class="verification-header">
+                                        <h3>📊 Bid Verification</h3>
+                                        <button id="closeVerification" class="close-btn">&times;</button>
+                                    </div>
+                                    <div id="verificationTable"></div>
+                                    <div class="verification-actions">
+                                        <button id="confirmBidsBtn" class="btn btn-primary">Confirm Bids</button>
+                                        <button id="editBidsBtn" class="btn btn-secondary">Edit Bids</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
                     <div id="playingPhase" style="display: none;">
@@ -2073,11 +2146,124 @@
                 return;
             }
             
+            // Show mobile verification screen
+            showMobileBidVerification();
+        }
+        
+        // Show mobile bid verification screen
+        function showMobileBidVerification() {
+            const verificationScreen = document.getElementById('mobileBidVerification');
+            const verificationTable = document.getElementById('verificationTable');
+            
+            // Create verification table
+            verificationTable.innerHTML = '';
+            
+            const table = document.createElement('table');
+            table.style.cssText = `
+                width: 100%;
+                border-collapse: collapse;
+                margin: 1rem 0;
+            `;
+            
+            // Table header
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            headerRow.style.cssText = `
+                background: var(--primary);
+                color: white;
+            `;
+            
+            const playerHeader = document.createElement('th');
+            playerHeader.textContent = 'Player';
+            playerHeader.style.cssText = `
+                padding: 1rem;
+                text-align: left;
+                font-weight: 600;
+            `;
+            
+            const bidHeader = document.createElement('th');
+            bidHeader.textContent = 'Bid';
+            bidHeader.style.cssText = `
+                padding: 1rem;
+                text-align: center;
+                font-weight: 600;
+            `;
+            
+            headerRow.appendChild(playerHeader);
+            headerRow.appendChild(bidHeader);
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+            
+            // Table body
+            const tbody = document.createElement('tbody');
+            
+            let totalBids = 0;
+            gameState.players.forEach(player => {
+                const bid = gameState.bids[player] || 0;
+                totalBids += bid;
+                
+                const tableRow = document.createElement('tr');
+                tableRow.style.cssText = `
+                    border-bottom: 1px solid var(--border);
+                `;
+                
+                const playerCell = document.createElement('td');
+                playerCell.textContent = `👤 ${player}`;
+                playerCell.style.cssText = `
+                    padding: 1rem;
+                    font-weight: 600;
+                    color: var(--text);
+                `;
+                
+                const bidCell = document.createElement('td');
+                bidCell.textContent = bid;
+                bidCell.style.cssText = `
+                    padding: 1rem;
+                    text-align: center;
+                    font-weight: 600;
+                    color: var(--primary);
+                `;
+                
+                tableRow.appendChild(playerCell);
+                tableRow.appendChild(bidCell);
+                tbody.appendChild(tableRow);
+            });
+            
+            table.appendChild(tbody);
+            verificationTable.appendChild(table);
+            
+            // Add total display
+            const totalDisplay = document.createElement('div');
+            totalDisplay.style.cssText = `
+                background: var(--success);
+                color: white;
+                padding: 1rem;
+                border-radius: 0.5rem;
+                text-align: center;
+                font-weight: 600;
+                margin: 1rem 0;
+            `;
+            totalDisplay.textContent = `Total Bids: ${totalBids} (Valid)`;
+            verificationTable.appendChild(totalDisplay);
+            
+            verificationScreen.style.display = 'block';
+        }
+        
+        // Confirm bids and proceed to playing phase
+        function confirmBids() {
             gameState.gamePhase = 'playing';
             showPlayingPhase();
             saveGame();
             
-            showAdaptiveNotification('🎯 Bids submitted! Time to play and record tricks!', 'success', 4000);
+            // Hide verification screen
+            document.getElementById('mobileBidVerification').style.display = 'none';
+            
+            showAdaptiveNotification('🎯 Bids confirmed! Time to play and record tricks!', 'success', 4000);
+        }
+        
+        // Edit bids (go back to bidding)
+        function editBids() {
+            document.getElementById('mobileBidVerification').style.display = 'none';
         }
 
         // Show playing phase UI
@@ -2677,13 +2863,32 @@
                 });
             });
 
-            addPlayerBtn.addEventListener('click', addPlayerInput);
-            startGameBtn.addEventListener('click', startGame);
-            submitBidsBtn.addEventListener('click', submitBids);
-            calculateRoundBtn.addEventListener('click', calculateRound);
-            nextRoundBtn.addEventListener('click', nextRound);
-            clearGameBtn.addEventListener('click', clearGame);
-            endGameBtn.addEventListener('click', endGame);
+                     addPlayerBtn.addEventListener('click', addPlayerInput);
+         startGameBtn.addEventListener('click', startGame);
+         submitBidsBtn.addEventListener('click', submitBids);
+         calculateRoundBtn.addEventListener('click', calculateRound);
+         nextRoundBtn.addEventListener('click', nextRound);
+         clearGameBtn.addEventListener('click', clearGame);
+         endGameBtn.addEventListener('click', endGame);
+         
+         // Mobile verification event listeners
+         document.addEventListener('DOMContentLoaded', function() {
+             const confirmBidsBtn = document.getElementById('confirmBidsBtn');
+             const editBidsBtn = document.getElementById('editBidsBtn');
+             const closeVerification = document.getElementById('closeVerification');
+             
+             if (confirmBidsBtn) {
+                 confirmBidsBtn.addEventListener('click', confirmBids);
+             }
+             
+             if (editBidsBtn) {
+                 editBidsBtn.addEventListener('click', editBids);
+             }
+             
+             if (closeVerification) {
+                 closeVerification.addEventListener('click', editBids);
+             }
+         });
             roundsSelect.addEventListener('change', handleRoundsSelection);
             
             modeCards.forEach(card => {
